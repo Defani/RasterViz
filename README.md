@@ -1,4 +1,4 @@
-# QRVIZ — Raster Visualization Plugin for QGIS
+# QRVIZ — Raster Visualization & Colormap Tools for QGIS
 
 ![QGIS](https://img.shields.io/badge/QGIS-3.x-green?logo=qgis)
 ![Python](https://img.shields.io/badge/Python-3.x-blue?logo=python)
@@ -6,16 +6,13 @@
 
 ## Overview
 
-QRVIZ is a QGIS plugin designed to simplify raster visualization workflows using customizable color maps and enhanced raster display utilities. The plugin helps users quickly visualize raster datasets for remote sensing, GIS analysis, environmental mapping, and land cover interpretation.
+**QRVIZ** is a Python-based QGIS plugin developed to simplify raster visualization workflows inside QGIS. The plugin focuses on rapid raster rendering, custom colormap generation, RGB visualization, and scientific raster display optimization for remote sensing and GIS applications.
 
-This plugin is suitable for:
+The plugin integrates QGIS Python API (`PyQGIS`) with `PyQt5`, `GDAL`, and raster processing utilities to provide lightweight visualization tools directly inside the QGIS desktop environment.
 
-* Remote sensing analysis
-* Vegetation index visualization
-* DEM and terrain rendering
-* Land cover interpretation
-* Scientific raster presentation
-* GIS education and training
+**Developed by:** Defani Arman Alfitriansyah
+**Institution:** Faculty of Forestry and Environmental Science, Universitas Kuningan
+**Year:** 2026
 
 ---
 
@@ -94,7 +91,7 @@ QRVIZ
 
 ---
 
-# Python Packages
+# Core Libraries & Python Packages
 
 The plugin uses several Python libraries integrated with QGIS.
 
@@ -233,6 +230,22 @@ Solution:
 * Reinstall plugin
 * Verify plugin folder structure
 * Ensure all files are extracted correctly
+
+---
+
+# Scientific References
+
+GDAL/OGR contributors. (2024). *GDAL/OGR Geospatial Data Abstraction Software Library*. Open Source Geospatial Foundation. [https://gdal.org/](https://gdal.org/)
+
+QGIS Development Team. (2026). *QGIS Geographic Information System*. Open Source Geospatial Foundation Project. [https://qgis.org/](https://qgis.org/)
+
+Riverbank Computing. (2024). *PyQt5 Documentation*. [https://www.riverbankcomputing.com/software/pyqt/](https://www.riverbankcomputing.com/software/pyqt/)
+
+Van Rossum, G., & Drake, F. L. (2009). *Python 3 Reference Manual*. CreateSpace.
+
+Harris, C. R., Millman, K. J., van der Walt, S. J., et al. (2020). Array programming with NumPy. *Nature*, 585, 357–362. [https://doi.org/10.1038/s41586-020-2649-2](https://doi.org/10.1038/s41586-020-2649-2)
+
+Hunter, J. D. (2007). Matplotlib: A 2D graphics environment. *Computing in Science & Engineering*, 9(3), 90–95. [https://doi.org/10.1109/MCSE.2007.55](https://doi.org/10.1109/MCSE.2007.55)
 
 ---
 
