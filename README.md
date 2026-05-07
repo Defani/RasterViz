@@ -1,277 +1,450 @@
-# QRVIZ — Raster Visualization & Colormap Tools for QGIS
+# RasterViz
 
-![QGIS](https://img.shields.io/badge/QGIS-3.x-green?logo=qgis)
-![Python](https://img.shields.io/badge/Python-3.x-blue?logo=python)
-![License](https://img.shields.io/badge/License-MIT-orange)
+<div align="center">
+
+
+
+### Scientific Raster Visualization Plugin for QGIS
+
+**Rasterio-inspired raster rendering with a fully interactive GUI for publication-quality scientific maps.**
+
+![QGIS](https://img.shields.io/badge/QGIS-3.x-green?style=for-the-badge\&logo=qgis)
+![Python](https://img.shields.io/badge/Python-3.x-blue?style=for-the-badge\&logo=python)
+![License](https://img.shields.io/badge/License-GPLv3-orange?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-Stable-success?style=for-the-badge)
+
+</div>
+
+---
+<img width="1920" height="1080" alt="Screenshot 2026-05-08 015933" src="https://github.com/user-attachments/assets/a12bdfdf-45b7-4139-bf52-f913ee2e3365" />
 
 ## Overview
 
-**QRVIZ** is a Python-based QGIS plugin developed to simplify raster visualization workflows inside QGIS. The plugin focuses on rapid raster rendering, custom colormap generation, RGB visualization, and scientific raster display optimization for remote sensing and GIS applications.
+**RasterViz** is a professional raster visualization plugin for QGIS designed for researchers, GIS analysts, remote sensing practitioners, environmental scientists, and cartographers who require high-quality scientific raster rendering directly inside the QGIS environment.
 
-The plugin integrates QGIS Python API (`PyQGIS`) with `PyQt5`, `GDAL`, and raster processing utilities to provide lightweight visualization tools directly inside the QGIS desktop environment.
+The plugin replicates the clean visualization aesthetics of Python's `rasterio.show()` workflow while eliminating the need for external scripting or notebook-based rendering. RasterViz combines scientific visualization principles with a modern PyQt5 graphical user interface, enabling users to generate publication-ready raster maps interactively.
 
-**Developed by:** Defani Arman Alfitriansyah
-**Institution:** Faculty of Forestry and Environmental Science, Universitas Kuningan
-**Year:** 2026
+Unlike conventional QGIS styling workflows, RasterViz focuses on:
 
----
+* Scientific color rendering
+* Advanced raster stretching
+* Interactive histogram analysis
+* Publication-quality legends and colorbars
+* Remote sensing optimized colormaps
+* Fast live-preview rendering
+* Export-ready scientific layouts
 
-# Features
-
-* Multiple raster visualization presets
-* Custom color map support
-* Fast raster rendering
-* RGB raster preview support
-* Simple GUI integration inside QGIS
-* Lightweight Python-based plugin architecture
 
 ---
 
-# Plugin Structure
+# Key Features
 
-```plaintext
-raster_viz_plugin/
-│
-├── __init__.py
-├── qrviz.py
-├── dialog.py
-├── colormaps.py
-├── metadata.txt
-├── icon.png
-├── demo_rgb.png
-└── __pycache__/
-```
+## 1. Rasterio-Style Scientific Rendering
+
+RasterViz emulates the visual philosophy of Python scientific plotting libraries such as:
+
+* rasterio
+* matplotlib
+* numpy-based scientific rendering workflows
+
+while remaining fully integrated inside QGIS through a graphical user interface.
+
+---
+
+## 2. Continuous Single-Band Rendering
+
+Render grayscale or continuous raster datasets using advanced stretch methods:
+
+### Supported Stretch Methods
+
+* Percentile Stretch
+* Min-Max Stretch
+* Manual Stretch
+* Dynamic Range Adjustment
+
+### Capabilities
+
+* Real-time visualization updates
+* Scientific colormap support
+* Histogram-assisted contrast tuning
+* Smooth interpolation rendering
+* High-resolution output rendering
+
+
+
+---
+
+## 3. Discrete / Classified Raster Visualization
+
+RasterViz supports fully customized classified raster rendering.
+
+### Features
+
+* Automatic gridcode scanning
+* Per-class color assignment
+* Editable class labels
+* Decimal precision control
+* Custom legend appearance
+* Publication-ready classified maps
+
+Ideal for:
+
+* Land cover classification
+* Habitat mapping
+* Forest type analysis
+* Segmentation outputs
+* Thematic raster products
+
+---
+
+## 4. RGB Composite Rendering
+
+Generate professional RGB composite imagery directly inside QGIS.
+
+### Supported Features
+
+* Independent stretch per band
+* Real-time preview
+* Contrast enhancement
+* Percentile clipping
+* Scientific RGB balancing
+
+
+---
+
+## 5. Scientific Colorbar System
+
+RasterViz includes a highly configurable scientific colorbar engine.
+
+### Supported Options
+
+* Horizontal colorbar
+* Vertical colorbar
+* Pointed colorbar
+* Extend styles:
+
+  * both
+  * max
+  * min
+  * neither
+* Adjustable geometry
+* Tick formatting
+* Publication-ready styling
+
+---
+
+## 6. Histogram Analysis Panel
+
+Interactive histogram visualization allows users to:
+
+* Analyze raster value distributions
+* Evaluate clipping boundaries
+* Optimize contrast stretch
+* Visualize percentile thresholds
+* Improve scientific interpretability
+
+Stretch boundaries are dynamically displayed within the histogram.
+
+---
+
+## 7. Coordinate Formatting System
+
+Multiple coordinate display formats are supported:
+
+* Decimal Degree
+* Degrees Minutes Seconds (DMS)
+* Degrees Minutes (DM)
+* Native projected coordinates
+* UTM / meter coordinates
+
+Suitable for scientific cartography and geospatial publications.
+
+---
+
+## 8. Live Preview Engine
+
+RasterViz uses cached NumPy arrays to accelerate rendering.
+
+### Benefits
+
+* No repeated raster re-reading
+* Faster parameter adjustment
+* Responsive GUI interaction
+* Efficient rendering workflow
+
+This significantly improves performance when working with large rasters.
+
+---
+
+## 9. Publication-Quality Export
+
+Export visualization outputs directly into high-resolution scientific formats.
+
+### Supported Export Formats
+
+* PNG (300 DPI)
+* SVG
+* TIFF
+* PDF
+
+Suitable for:
+
+* Journal figures
+* Conference posters
+* Thesis illustrations
+* Scientific reports
+* Remote sensing publications
+
+---
+
+## 10. Domain-Specific Colormaps
+
+RasterViz includes custom scientific colormaps designed for remote sensing and environmental analysis.
+
+### Included Visualization Themes
+
+* Vegetation analysis
+* Biomass gradients
+* Water indices
+* Mangrove health
+* Thermal visualization
+* Elevation rendering
+* Classification palettes
+
+The plugin also supports Matplotlib colormaps.
+
+---
+
+# Technical Architecture
+
+## Built With
+
+RasterViz is developed using:
+
+* PyQGIS
+* PyQt5
+* NumPy
+* Matplotlib (Qt5Agg backend)
+* Scientific raster rendering workflows
+
+---
+
+## Core Design Principles
+
+The plugin was designed around:
+
+* Scientific reproducibility
+* GUI-based accessibility
+* High-performance rendering
+* Publication-quality output
+* Minimal workflow friction
+* Remote sensing compatibility
 
 ---
 
 # Installation
 
-## Method 1 — Manual Installation
+## Method 1 — Install from ZIP
 
-1. Download the plugin ZIP file.
-2. Extract the ZIP file.
-3. Copy the folder:
+1. Download the latest RasterViz release.
+2. Open QGIS.
+3. Navigate to:
 
-```plaintext
-raster_viz_plugin
+```text
+Plugins → Manage and Install Plugins → Install from ZIP
 ```
 
-into:
+4. Select the downloaded ZIP file.
+5. Activate the plugin.
 
-```plaintext
-C:\Users\USERNAME\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\
+---
+
+## Method 2 — Manual Installation
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/Defani/RasterViz.git
 ```
 
-4. Open QGIS.
-5. Go to:
+2. Copy the folder into your QGIS plugins directory.
 
-```plaintext
+Typical paths:
+
+### Windows
+
+```text
+C:\Users\<username>\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins
+```
+
+### Linux
+
+```text
+~/.local/share/QGIS/QGIS3/profiles/default/python/plugins
+```
+
+### macOS
+
+```text
+~/Library/Application Support/QGIS/QGIS3/profiles/default/python/plugins
+```
+
+3. Restart QGIS.
+4. Enable RasterViz from the Plugin Manager.
+
+---
+
+# Quick Start
+
+## Continuous Raster Workflow
+
+1. Load a raster into QGIS.
+2. Open RasterViz.
+3. Select the raster layer.
+4. Choose:
+
+   * Colormap
+   * Stretch method
+   * Percentile or manual range
+5. Adjust histogram boundaries.
+6. Export the final visualization.
+
+---
+
+## RGB Composite Workflow
+
+1. Open the RGB tab.
+2. Select:
+
+   * Red band
+   * Green band
+   * Blue band
+3. Configure individual stretches.
+4. Preview the composite.
+5. Export the figure.
+
+---
+
+## Classified Raster Workflow
+
+1. Load a classified raster.
+2. Enable discrete rendering.
+3. Scan raster classes automatically.
+4. Assign:
+
+   * Colors
+   * Labels
+   * Decimal precision
+5. Generate publication-ready thematic maps.
+
+---
+
+# Use Cases
+
+## Remote Sensing
+
+* Vegetation indices
+* Change detection
+* Multispectral composites
+* Environmental monitoring
+* Mangrove ecosystem analysis
+
+---
+
+## Forestry Applications
+
+* Above-ground biomass mapping
+* Forest degradation analysis
+* Canopy density visualization
+* Conservation mapping
+
+---
+
+## Environmental Science
+
+* Water quality analysis
+* Coastal monitoring
+* Wetland visualization
+* Ecological spatial analysis
+
+---
+
+## Academic Research
+
+RasterViz is suitable for:
+
+* Scientific papers
+* Undergraduate theses
+* Master's dissertations
+* Doctoral research
+* Journal publication figures
+
+---
+
+# Performance Optimization
+
+RasterViz incorporates several optimization strategies:
+
+* Cached NumPy raster arrays
+* Efficient Matplotlib rendering
+* Reduced raster re-reading
+* Interactive GUI refresh optimization
+* Lightweight rendering architecture
+
+These optimizations improve usability for large remote sensing datasets.
+
+---
+
+# Compatibility
+
+| Component        | Supported                                      |
+| ---------------- | ---------------------------------------------- |
+| QGIS             | 3.x                                            |
+| Python           | 3.x                                            |
+| Operating System | Windows / Linux / macOS                        |
+| Raster Types     | GeoTIFF, IMG, ASC, and compatible GDAL rasters |
+
+---
+
+# Official QGIS Plugin Repository
+
+RasterViz is officially available on the QGIS Plugin Repository.
+
+| Information     | Details                                                                            |
+| --------------- | ---------------------------------------------------------------------------------- |
+| Plugin Name     | RasterViz                                                                          |
+| Plugin ID       | 5157                                                                               |
+| QGIS Repository | [https://plugins.qgis.org/plugins/qrviz/](https://plugins.qgis.org/plugins/qrviz/) |
+
+---
+
+# Installation via QGIS Plugin Manager
+
+1. Open QGIS.
+2. Navigate to:
+
+```text
 Plugins → Manage and Install Plugins
 ```
 
-6. Enable:
+3. Search for:
 
-```plaintext
-QRVIZ
+```text
+RasterViz
 ```
 
----
-
-# Requirements
-
-## Software Requirements
-
-* QGIS 3.x
-* Python 3.x
-* GDAL
-* PyQt5
-* NumPy
-* Rasterio *(optional)*
-* Matplotlib *(optional for visualization previews)*
+4. Click **Install Plugin**.
+5. Launch RasterViz from the Plugins menu or toolbar.
 
 ---
 
-# Core Libraries & Python Packages
+# Repository
 
-The plugin uses several Python libraries integrated with QGIS.
+Official Repository:
 
-| Package      | Function                      |
-| ------------ | ----------------------------- |
-| `qgis.core`  | Core QGIS raster processing   |
-| `qgis.gui`   | GUI integration in QGIS       |
-| `PyQt5`      | Interface and dialog windows  |
-| `os`         | File and directory management |
-| `numpy`      | Raster numerical operations   |
-| `matplotlib` | Color map rendering           |
-| `gdal`       | Raster data handling          |
-
----
-
-# Installation Dependencies
-
-Most dependencies are already included in QGIS.
-
-If additional packages are required:
-
-```bash
-pip install numpy matplotlib rasterio
+```text
+https://github.com/Defani/RasterViz
 ```
-
-GDAL should preferably use the QGIS bundled environment.
-
----
-
-# Supported Raster Data
-
-* GeoTIFF (`.tif`)
-* IMG Raster (`.img`)
-* JPEG2000 (`.jp2`)
-* ASCII Grid (`.asc`)
-* DEM Raster
-* Sentinel-2 Imagery
-* Landsat Imagery
-
----
-
-# Visualization Modes
-
-| Visualization   | Description                  |
-| --------------- | ---------------------------- |
-| RGB Composite   | Natural color visualization  |
-| False Color     | Vegetation enhancement       |
-| NDVI Style      | Vegetation index rendering   |
-| DEM Shading     | Terrain visualization        |
-| Custom Colormap | User-defined color gradients |
-
----
-
-# Usage
-
-1. Open QGIS.
-2. Load raster data.
-3. Open QRVIZ plugin from toolbar or plugin menu.
-4. Select visualization style.
-5. Apply color map or raster enhancement.
-6. Export visualization if needed.
-
----
-
-# Example Visualization
-
-## RGB Visualization Example
-
-![Demo](demo_rgb.png)
-
----
-
-# Metadata
-
-| Property             | Value              |
-| -------------------- | ------------------ |
-| Plugin Name          | QRVIZ              |
-| Type                 | QGIS Python Plugin |
-| Main File            | qrviz.py           |
-| GUI Module           | dialog.py          |
-| Visualization Engine | colormaps.py       |
-
----
-
-# Development
-
-## Clone Repository
-
-```bash
-git clone https://github.com/USERNAME/QRVIZ.git
-```
-
-## Open Plugin Folder
-
-```bash
-cd QRVIZ
-```
-
----
-
-# Common Errors
-
-## Plugin Not Showing in QGIS
-
-Ensure the plugin folder structure is correct:
-
-```plaintext
-plugins/raster_viz_plugin/
-```
-
-not:
-
-```plaintext
-plugins/raster_viz_plugin/raster_viz_plugin/
-```
-
----
-
-## Missing About Dialog / HTML Error
-
-If QGIS shows errors related to:
-
-```python
-html_text = open(about_file).read()
-```
-
-possible causes:
-
-* Missing HTML resource file
-* Incorrect plugin path
-* Incompatible QGIS version
-* Corrupted plugin extraction
-
-Solution:
-
-* Reinstall plugin
-* Verify plugin folder structure
-* Ensure all files are extracted correctly
-
----
-
-# Scientific References
-
-GDAL/OGR contributors. (2024). *GDAL/OGR Geospatial Data Abstraction Software Library*. Open Source Geospatial Foundation. [https://gdal.org/](https://gdal.org/)
-
-QGIS Development Team. (2026). *QGIS Geographic Information System*. Open Source Geospatial Foundation Project. [https://qgis.org/](https://qgis.org/)
-
-Riverbank Computing. (2024). *PyQt5 Documentation*. [https://www.riverbankcomputing.com/software/pyqt/](https://www.riverbankcomputing.com/software/pyqt/)
-
-Van Rossum, G., & Drake, F. L. (2009). *Python 3 Reference Manual*. CreateSpace.
-
-Harris, C. R., Millman, K. J., van der Walt, S. J., et al. (2020). Array programming with NumPy. *Nature*, 585, 357–362. [https://doi.org/10.1038/s41586-020-2649-2](https://doi.org/10.1038/s41586-020-2649-2)
-
-Hunter, J. D. (2007). Matplotlib: A 2D graphics environment. *Computing in Science & Engineering*, 9(3), 90–95. [https://doi.org/10.1109/MCSE.2007.55](https://doi.org/10.1109/MCSE.2007.55)
-
----
-
-# Citation
-
-If you use this plugin in research, publication, or academic work, please cite:
-
-```bibtex
-@software{qrviz2026,
-  author = {Defani Arman Alfitriansyah},
-  title = {QRVIZ: Raster Visualization Plugin for QGIS},
-  year = {2026},
-  version = {1.0},
-  url = {https://github.com/USERNAME/QRVIZ}
-}
-```
-
-## APA Citation
-
-Alfitriansyah, D. A. (2026). *QRVIZ: Raster Visualization Plugin for QGIS* (Version 1.0) [Computer software]. GitHub. [https://github.com/USERNAME/QRVIZ](https://github.com/USERNAME/QRVIZ)
-
----
-
-# License
-
-MIT License
 
 ---
 
@@ -279,20 +452,78 @@ MIT License
 
 **Defani Arman Alfitriansyah**
 
-Forestry Student | GIS & Remote Sensing Enthusiast | QGIS Plugin Developer
+Remote Sensing and GIS Researcher
+
+Specialization:
+
+* Scientific raster visualization
+* Remote sensing workflows
+* Mangrove ecosystem analysis
+* Google Earth Engine
+* GIS cartography
+
+Email:
+
+```text
+defaniarman@gmail.com
+```
 
 ---
 
-# Support
+# License
 
-If you find bugs or want to contribute:
+This project is licensed under the GNU General Public License v3.0 (GPL-3.0).
 
-* Open an issue
-* Submit pull requests
-* Share feature suggestions
+The GPL license ensures that RasterViz remains free and open-source software, allowing users to study, modify, and redistribute the plugin under the same license terms.
+
+See the LICENSE file for full license details.
 
 ---
 
-# Keywords
+# Citation
 
-QGIS Plugin, Raster Visualization, GIS, Remote Sensing, NDVI, DEM, Color Map, Spatial Analysis, Python Plugin, Geospatial Visualization
+If you use RasterViz in academic work, please cite:
+
+```text
+Alfitriansyah, D. A. (2026). RasterViz: Scientific Raster Visualization Plugin for QGIS.
+GitHub Repository: https://github.com/Defani/RasterViz
+```
+
+---
+
+# Future Development
+
+Planned future features include:
+
+* Batch rendering system
+* Layout manager integration
+* Advanced annotation tools
+* Multi-panel scientific plotting
+* Additional scientific colormaps
+* Interactive raster statistics
+* Cloud optimized raster support
+* Temporal raster visualization
+
+---
+
+# Acknowledgements
+
+RasterViz was inspired by the scientific visualization ecosystem surrounding:
+
+* rasterio
+* matplotlib
+* NumPy
+* PyQGIS
+* Open-source remote sensing workflows
+
+Special thanks to the QGIS and scientific Python communities.
+
+---
+
+<div align="center">
+
+## RasterViz
+
+### Bringing scientific raster visualization into an interactive QGIS workflow.
+
+</div>
