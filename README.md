@@ -1,504 +1,446 @@
-# RasterViz
+# RasterViz — Scientific Raster Visualization Plugin for QGIS
 
-<div align="center">
+<p align="left">
+  <img src="https://github.com/user-attachments/assets/872165fe-7ea5-48ab-acf9-200205f19fde" alt="RasterViz Icon" width="96"/>
+</p>
 
 
+<p align="left">
+  <a href="https://github.com/Defani/QRasterVIZ/releases"><img src="https://img.shields.io/badge/version-1.1.0-blue?style=flat-square" alt="Version"/></a>
+  <a href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.html"><img src="https://img.shields.io/badge/license-GPL--2.0--or--later-green?style=flat-square" alt="License"/></a>
+  <a href="https://plugins.qgis.org/"><img src="https://img.shields.io/badge/QGIS-3.x-brightgreen?style=flat-square&logo=qgis" alt="QGIS"/></a>
+  <a href="https://github.com/Defani/QRasterVIZ/issues"><img src="https://img.shields.io/badge/issues-open-orange?style=flat-square" alt="Issues"/></a>
+</p>
 
-### Scientific Raster Visualization Plugin for QGIS
-
-**Rasterio-inspired raster rendering with a fully interactive GUI for publication-quality scientific maps.**
-
-![QGIS](https://img.shields.io/badge/QGIS-3.x-green?style=for-the-badge\&logo=qgis)
-![Python](https://img.shields.io/badge/Python-3.x-blue?style=for-the-badge\&logo=python)
-![License](https://img.shields.io/badge/License-GPLv3-orange?style=for-the-badge)
-![Status](https://img.shields.io/badge/Status-Stable-success?style=for-the-badge)
-
-</div>
+> **RasterViz** delivers publication-quality raster visualization directly inside QGIS — styled after the aesthetics of `rasterio.show()` — without requiring an external Python environment or Jupyter notebook. The plugin is currently under review by the QGIS plugin team.
 
 ---
-<img width="1920" height="1080" alt="Screenshot 2026-05-08 015933" src="https://github.com/user-attachments/assets/a12bdfdf-45b7-4139-bf52-f913ee2e3365" />
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Key Features](#key-features)
+- [Package Dependencies](#package-dependencies)
+- [Installation](#installation)
+  - [Requirements](#requirements)
+  - [Install via QGIS Plugin Manager (Recommended)](#install-via-qgis-plugin-manager-recommended)
+  - [Install from ZIP](#install-from-zip)
+  - [Install from Source](#install-from-source)
+- [Plugin Interface](#plugin-interface)
+- [Quick Start Tutorial](#quick-start-tutorial)
+  - [1. Open a Raster Layer](#1-open-a-raster-layer)
+  - [2. Configure Stretch](#2-configure-stretch)
+  - [3. Choose a Colormap](#3-choose-a-colormap)
+  - [4. Tune Coordinate Labels](#4-tune-coordinate-labels)
+  - [5. Style the Colorbar](#5-style-the-colorbar)
+  - [6. Export](#6-export)
+- [Feature Reference](#feature-reference)
+  - [Single Band — Continuous Rendering](#single-band--continuous-rendering)
+  - [Discrete / Classified Rendering](#discrete--classified-rendering)
+  - [RGB Three-Band Composite](#rgb-three-band-composite)
+  - [Coordinate Label Control](#coordinate-label-control)
+  - [Colormap Library](#colormap-library)
+  - [Colorbar / Legend Layout](#colorbar--legend-layout)
+  - [Multi-Map Layout Series](#multi-map-layout-series)
+  - [Export](#export)
+- [Codebase Structure](#codebase-structure)
+- [Technical Notes](#technical-notes)
+- [Contributing](#contributing)
+- [License](#license)
+- [Citation](#citation)
+
+---
 
 ## Overview
 
-**RasterViz** is a professional raster visualization plugin for QGIS designed for researchers, GIS analysts, remote sensing practitioners, environmental scientists, and cartographers who require high-quality scientific raster rendering directly inside the QGIS environment.
-
-The plugin replicates the clean visualization aesthetics of Python's `rasterio.show()` workflow while eliminating the need for external scripting or notebook-based rendering. RasterViz combines scientific visualization principles with a modern PyQt5 graphical user interface, enabling users to generate publication-ready raster maps interactively.
-
-Unlike conventional QGIS styling workflows, RasterViz focuses on:
-
-* Scientific color rendering
-* Advanced raster stretching
-* Interactive histogram analysis
-* Publication-quality legends and colorbars
-* Remote sensing optimized colormaps
-* Fast live-preview rendering
-* Export-ready scientific layouts
-
-
----
-
-# Key Features
-
-## Rasterio-Style Scientific Rendering
-
-RasterViz emulates the visual philosophy of Python scientific plotting libraries such as:
-
-* rasterio
-* matplotlib
-* numpy-based scientific rendering workflows
-
-while remaining fully integrated inside QGIS through a graphical user interface.
-
----
-
-## Continuous Single-Band Rendering
-
-Render grayscale or continuous raster datasets using advanced stretch methods:
-
-### Supported Stretch Methods
-
-* Percentile Stretch
-* Min-Max Stretch
-* Manual Stretch
-* Dynamic Range Adjustment
-
-### Capabilities
-
-* Real-time visualization updates
-* Scientific colormap support
-* Histogram-assisted contrast tuning
-* Smooth interpolation rendering
-* High-resolution output rendering
-
-
-
----
-
-## Discrete / Classified Raster Visualization
-
-RasterViz supports fully customized classified raster rendering.
-<img width="1920" height="1080" alt="Screenshot 2026-05-08 023559" src="https://github.com/user-attachments/assets/40073bb4-7204-41eb-907e-263f8881ace1" />
-
-### Features
-
-* Automatic gridcode scanning
-* Per-class color assignment
-* Editable class labels
-* Decimal precision control
-* Custom legend appearance
-* Publication-ready classified maps
-
-Ideal for:
-
-* Land cover classification
-* Habitat mapping
-* Forest type analysis
-* Segmentation outputs
-* Thematic raster products
-
----
-
-##  RGB Composite Rendering
-
-Generate professional RGB composite imagery directly inside QGIS.
-
-### Supported Features
-
-* Independent stretch per band
-* Real-time preview
-* Contrast enhancement
-* Percentile clipping
-* Scientific RGB balancing
-
-
----
-
-## Scientific Colorbar System
-
-RasterViz includes a highly configurable scientific colorbar engine.
-
-### Supported Options
-
-* Horizontal colorbar
-* Vertical colorbar
-* Pointed colorbar
-* Extend styles:
-
-  * both
-  * max
-  * min
-  * neither
-* Adjustable geometry
-* Tick formatting
-* Publication-ready styling
-
----
-
-
-
-## Coordinate Formatting System
-
-Multiple coordinate display formats are supported:
-
-* Decimal Degree
-* Degrees Minutes Seconds (DMS)
-* Degrees Minutes (DM)
-* Native projected coordinates
-* UTM / meter coordinates
-
-Suitable for scientific cartography and geospatial publications.
-
----
-
-## Live Preview Engine
-
-RasterViz uses cached NumPy arrays to accelerate rendering.
-
-### Benefits
-
-* No repeated raster re-reading
-* Faster parameter adjustment
-* Responsive GUI interaction
-* Efficient rendering workflow
-
-This significantly improves performance when working with large rasters.
-
----
-
-## Publication-Quality Export
-
-Export visualization outputs directly into high-resolution scientific formats.
-
-### Supported Export Formats
-
-* PNG (300 DPI)
-* SVG
-* TIFF
-* PDF
-
-Suitable for:
-
-* Journal figures
-* Conference posters
-* Thesis illustrations
-* Scientific reports
-* Remote sensing publications
-
----
-
-
-
----
-
-# Technical Architecture
-
-## Built With
-
-RasterViz is developed using:
-
-* PyQGIS
-* PyQt5
-* NumPy
-* Matplotlib (Qt5Agg backend)
-* Scientific raster rendering workflows
-
----
-
-## Core Design Principles
-
-The plugin was designed around:
-
-* Scientific reproducibility
-* GUI-based accessibility
-* High-performance rendering
-* Publication-quality output
-* Minimal workflow friction
-* Remote sensing compatibility
-
----
-
-# Installation
-
-## Method 1 — Install from ZIP
-
-1. Download the latest RasterViz release.
-2. Open QGIS.
-3. Navigate to:
-
-```text
-Plugins → Manage and Install Plugins → Install from ZIP
+QGIS provides adequate native raster symbology, but generating a publication-ready figure — with a properly styled colorbar, geographic coordinate labels, consistent typography, and controlled stretch — still requires switching to Python scripts or external GIS software. **RasterViz** closes that gap.
+
+The plugin renders raster data through **Matplotlib** (using the `Qt5Agg` backend embedded directly in the QGIS dialog), so every figure it produces is visually identical to what a researcher would generate with:
+
+```python
+import rasterio, matplotlib.pyplot as plt
+from rasterio.plot import show
+src = rasterio.open("ndvi.tif")
+show(src, cmap="RdYlGn", title="NDVI")
 ```
 
-4. Select the downloaded ZIP file.
-5. Activate the plugin.
+— but with zero scripting required and with far more control over stretch, colorbar geometry, coordinate format, label rotation, and multi-map layout.
 
 ---
 
-## Method 2 — Manual Installation
+## Key Features
 
-1. Clone the repository:
+| Category | Capability |
+|---|---|
+| **Rendering modes** | Single-band continuous, Discrete/classified, RGB composite |
+| **Stretch** | Actual min–max, Percentile (configurable low/high), Manual vmin/vmax |
+| **Colormaps** | 24 domain-specific custom palettes + full Matplotlib library (≈ 60 named colormaps) |
+| **Colorbar** | Horizontal / vertical; pointed (both/max/min/neither); position, size, label, tick count, tick decimals all configurable |
+| **Coordinates** | DMS, DM, Decimal Degree, UTM/Metre; independent X/Y tick count, font size, decimal places |
+| **Label rotation** | Independent X-axis and Y-axis tick label rotation (0–360°) |
+| **Grid lines** | Solid, dashed, dotted; toggleable |
+| **Background** | Soft Black, White, Transparent (dark text), Transparent (light text) |
+| **Typography** | Any font installed on the system; configurable sizes for title, coordinates, colorbar |
+| **Discrete mapping** | Auto scan gridcodes, per-class colour (swatch + hex), editable label, per-class decimal places |
+| **Layout series** | Configurable N×M grid of maps; each sub-map has independent layer, band, colormap, stretch, title, colorbar toggle |
+| **Export** | PNG (300 DPI), SVG, GeoTIFF, PDF |
+| **Live preview** | All parameter changes re-render instantly from a cached NumPy array — no disk re-read |
+
+---
+
+## Package Dependencies
+
+RasterViz is built entirely on packages that ship with QGIS on all major platforms. **No additional pip installation is required** for standard usage.
+
+| Package | Role | Ships with QGIS |
+|---|---|---|
+| **PyQGIS** (`qgis.core`, `qgis.PyQt`) | Layer access, raster data provider, QGIS GUI integration | ✅ Yes |
+| **PyQt5** (`PyQt5.QtWidgets`, `.QtGui`, `.QtCore`) | All dialog, widget, and layout construction | ✅ Yes |
+| **NumPy** | Raster array operations, stretch computation, RGBA image assembly | ✅ Yes |
+| **Matplotlib** (`pyplot`, `colors`, `ticker`, `patches`, `gridspec`, `backend_qt5agg`) | Figure rendering, colormap registry, colorbar, tick formatting | ✅ Yes |
+| `os` | File path resolution | ✅ Python stdlib |
+
+> **Summary:** `PyQGIS + PyQt5 + NumPy + Matplotlib` — all bundled with the standard QGIS installation on Windows (OSGeo4W), Linux, and macOS.
+
+---
+
+## Installation
+
+### Requirements
+
+- QGIS **≥ 3.0** (tested up to 3.x series)
+- Python **≥ 3.6** (comes with QGIS)
+- NumPy, Matplotlib (both included in QGIS default install)
+
+### Install via QGIS Plugin Manager (Recommended)
+
+> *Pending official QGIS plugin repository approval.*
+
+1. Open QGIS → **Plugins** → **Manage and Install Plugins…**
+2. Search for **RasterViz** in the *All* tab.
+3. Click **Install Plugin**.
+4. Access via **Raster** menu → **QRVIZ** → **QRVIZ — Scientific Raster Visualization**.
+
+### Install from ZIP
+
+1. Download the latest release ZIP from the [Releases page](https://github.com/Defani/QRasterVIZ/releases).
+2. Open QGIS → **Plugins** → **Manage and Install Plugins…** → **Install from ZIP**.
+3. Browse to the downloaded `.zip` file and click **Install Plugin**.
+
+### Install from Source
 
 ```bash
-git clone https://github.com/Defani/RasterViz.git
+# Clone the repository
+git clone https://github.com/Defani/QRasterVIZ.git
+
+# Copy the plugin folder to your QGIS plugins directory
+# Windows (OSGeo4W):
+cp -r QRasterVIZ/qrviz %APPDATA%\QGIS\QGIS3\profiles\default\python\plugins\qrviz
+
+# Linux:
+cp -r QRasterVIZ/qrviz ~/.local/share/QGIS/QGIS3/profiles/default/python/plugins/qrviz
+
+# macOS:
+cp -r QRasterVIZ/qrviz ~/Library/Application\ Support/QGIS/QGIS3/profiles/default/python/plugins/qrviz
 ```
 
-2. Copy the folder into your QGIS plugins directory.
+Then in QGIS: **Plugins → Manage and Install Plugins → Installed** — tick **QRVIZ** to activate.
 
-Typical paths:
+---
 
-### Windows
+## Plugin Interface
 
-```text
-C:\Users\<username>\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins
+<img width="1920" height="1080" alt="Screenshot 2026-05-08 015933" src="https://github.com/user-attachments/assets/f92844e1-226f-4b19-a7ef-ccb12d334575" />
+
+
+
+**Left panel — input controls:**
+
+- **Group 1 — Layer & Band:** Open raster file or select a loaded QGIS layer. Toggle Single Band / RGB mode. Set max pixel resolution for preview.
+- **Group 2 — Color Mode & Stretch:** Tab-switch between Continuous and Discrete mode. Full stretch and colormap controls.
+- **Group 3 — Export:** Save the current figure.
+
+**Right panel — rendering controls:**
+
+- **Group 4 — Display Control:** Background colour, show/hide grid, axes, colorbar.
+- **Group 5 — Title & Font:** Map title text, font family (all system fonts), font sizes.
+- **Group 6 — Map Geometry & Coordinates:** Figure axes position (X, Y, W, H as fractions), coordinate format, font size, decimal places, X/Y label rotation, tick count, grid line style.
+- **Group 7 — Colorbar Layout:** Orientation, end style (pointed / box), position, length, thickness, label, tick count, tick decimal places, padding.
+
+---
+
+## Quick Start Tutorial
+
+### 1. Open a Raster Layer
+
+Open QGIS and load a single-band GeoTIFF (e.g. an NDVI image derived from Sentinel-2). The layer will appear in the QGIS layer panel.
+
+Launch the plugin via **Raster → QRVIZ → QRVIZ — Scientific Raster Visualization**, or click the toolbar icon.
+
+In **Group 1**, either:
+- Click **OPEN RASTER FILE** to browse directly to a `.tif`, `.img`, or `.vrt`, or
+- Select an already-loaded layer from the **Layer** dropdown.
+
+Leave **Single Band** selected. Set **Band: 1** (or whichever band contains your index values).
+
+Click **READ DATA & RENDER**.
+
+The raster will appear in the centre canvas with the default `NDVI_Custom` colormap applied.
+
+---
+
+### 2. Configure Stretch
+
+In **Group 2 → Continuous tab**, three stretch modes are available:
+
+| Mode | When to use |
+|---|---|
+| **Actual Min–Max** | When the raster has been properly scaled (e.g. NDVI already −1 to 1) |
+| **Percentile** | Default recommendation — clips outlier pixels. Default: 2nd–98th percentile |
+| **Manual Min–Max** | Enter exact `vmin` / `vmax` values for reproducible figures across dates |
+
+For an NDVI raster, set **Percentile**, `Pmin = 2`, `Pmax = 98`. The canvas updates immediately.
+
+---
+
+### 3. Choose a Colormap
+
+Use the **◀ ▶** arrows in Group 2 to cycle through the colormap library. A colour ramp preview is shown inline.
+
+For vegetation mapping, recommended palettes:
+
+```
+NDVI_Custom       — white → brown → yellow → dark green (rasterio-style)
+RdYlGn_Custom     — red → yellow → green (diverging)
+Custom_BlkRdYlGn  — black → red → yellow → dark green (high-contrast)
+Mangrove          — beige → progressively dark forest green
 ```
 
-### Linux
+Enable **Reverse** to invert any palette (e.g. for SAR backscatter where bright = high).
 
-```text
-~/.local/share/QGIS/QGIS3/profiles/default/python/plugins
+---
+
+### 4. Tune Coordinate Labels
+
+In **Group 6 — Map Geometry & Coordinates**:
+
+1. Set **Coord Format** to `D (Decimal Degree)` for standard geographic layers.
+2. Set **Coord Decimals** to `4` (sufficient for sub-metre precision in degree space).
+3. Set **X Tick Count** = `5`, **Y Tick Count** = `5`.
+4. Set **X-label Rotation** = `45°` to prevent label overlap on dense longitude ticks.
+5. Set **Y-label Rotation** = `0°` for horizontal latitude labels (easier to read).
+
+---
+
+### 5. Style the Colorbar
+
+In **Group 7 — Colorbar Layout**:
+
+1. Set **Orientation** = `horizontal`.
+2. Set **End Style** = `Both Pointed` — replicates the rasterio aesthetic.
+3. Set **Colorbar Label** = `NDVI`.
+4. Leave **Pos X = 0.20**, **Pos Y = 0.05**, **Length = 0.60**, **Thickness = 0.03** (defaults centre the bar below the map).
+5. Set **Tick Count** = `5`, **Tick Decimals** = `2`.
+
+The canvas updates live with every change.
+
+---
+
+### 6. Export
+
+In **Group 3**, click **EXPORT IMAGE**. Choose PNG for raster output at 300 DPI, or PDF / SVG for vector-preserving formats.
+
+---
+
+## Feature Reference
+
+### Single Band — Continuous Rendering
+
+The core rendering path reads the selected band via `QgsRasterDataProvider.block()`, downsamples to a configurable maximum pixel count (default 1,000,000 px) to maintain GUI responsiveness, and caches the result as a NumPy `float64` array. Subsequent parameter changes (stretch, colormap, colorbar) re-render from the cache without disk access.
+
+Nodata values identified by the QGIS data provider are masked as `np.nan` and rendered as transparent pixels when "Transparent Nodata" is checked.
+
+### Discrete / Classified Rendering
+
+Switch to the **Discrete** tab in Group 2. After clicking **READ DATA & RENDER**, click **SCAN GRIDCODES** to automatically detect all unique pixel values. Each class gets its own row with:
+
+- Colour swatch button (opens `QColorDialog`)
+- Hex colour input field (live validation)
+- Editable text label (shown in the patch legend)
+- Decimal places spinbox (controls how the gridcode value is displayed in the legend)
+
+A **Set All Decimals** control applies a uniform decimal count across all rows. A **Nodata Colour** picker (with alpha support) controls the nodata pixel colour independently.
+
+### RGB Three-Band Composite
+
+Select **RGB** mode in Group 1 and assign band indices to R, G, B channels. Each channel is independently stretched using the chosen stretch mode before compositing. Suitable for Sentinel-2 true-colour (B4/B3/B2) or false-colour composites.
+
+### Coordinate Label Control
+
+Four coordinate formats are supported:
+
+| Format | Example output |
+|---|---|
+| DMS | `106°49'0.0" E` |
+| DM | `106°49.000' E` |
+| Decimal Degree | `106.8167° E` |
+| Default (UTM/Metre) | `476234.0000` |
+
+Tick label rotation is controlled independently for the X-axis (longitude) and Y-axis (latitude). A rotation of 45° on X labels prevents overlap when tick density is high. Y labels at 0° produce horizontal text, which is more readable for latitude values.
+
+### Colormap Library
+
+RasterViz registers **24 domain-specific custom palettes** at startup alongside the full standard Matplotlib palette library, giving access to approximately **60+ named colormaps** in total.
+
+**Custom domain-specific palettes:**
+
+| Palette name | Domain |
+|---|---|
+| `NDVI_Custom` | NDVI / vegetation greenness |
+| `RdYlGn_Custom` | Diverging vegetation health |
+| `Custom_BlkRdYlGn` | High-contrast NDVI (dark background maps) |
+| `YlGn_Custom` | Sequential green (leaf area, canopy cover) |
+| `Red2Green` | Stress-to-health gradient |
+| `Brown2Green` | Soil-to-vegetation transition |
+| `Mangrove` | Mangrove canopy density |
+| `Carbon_Stock` | Biomass / carbon stock (yellow → dark brown) |
+| `SAR_Backscatter` | SAR intensity (dark → bright) |
+| `Water` | Water depth / turbidity |
+| `Ocean_Deep` | Bathymetry / deep water |
+| `Urban` | Land use / LULC (vegetation → built-up) |
+| `Agriculture` | Cropland mapping |
+| `Terrain_Custom` | Elevation / DEM |
+| `RdBu_Custom` | Diverging anomaly maps |
+| `Spectral_Custom` | General-purpose spectral |
+| `Blues_Custom` | Rainfall / moisture sequential |
+| `Viridis_Custom` | Perceptually uniform (general) |
+| `Magma_Custom` | Perceptually uniform (dark → bright) |
+| `Inferno_Custom` | Perceptually uniform (high contrast) |
+| `Plasma_Custom` | Perceptually uniform (purple → yellow) |
+| `Cividis_Custom` | Colour-vision-deficiency safe |
+| `Greys_Custom` | Panchromatic / grayscale |
+| `Rainbow_Custom` | Multi-class thematic (use sparingly) |
+
+All palettes are also available in reversed form by enabling **Reverse** in the GUI.
+
+### Colorbar / Legend Layout
+
+For continuous mode, the colorbar is rendered as a Matplotlib `colorbar` instance on a manually positioned `axes`. Four end styles are available:
+
+- **Both Pointed** — the rasterio default; triangular extensions on both ends indicating data extends beyond the mapped range.
+- **Right Pointed (Max)** — only the high end is clipped.
+- **Left Pointed (Min)** — only the low end is clipped.
+- **Box (Standard)** — rectangular, no extension arrows.
+
+All positional and size parameters are specified as fractions of the figure [0, 1], making them scale-independent. The **Auto-position** feature snaps the colorbar to sensible default positions when switching between horizontal and vertical orientation.
+
+For discrete mode, a Matplotlib `legend` with colour patches replaces the continuous colorbar. Patch labels combine the user-defined class label and the numeric gridcode.
+
+### Multi-Map Layout Series
+
+The **Layout Series** tab allows generating a publication-ready figure containing N×M sub-maps from different layers, bands, or colormaps in a single export.
+
+1. Set **Columns** and **Rows** (e.g. 2×2 for four maps, 3×2 for six maps).
+2. Click **BUILD LAYOUT GRID** — a configuration row appears for each sub-map.
+3. For each sub-map, assign: layer, band, colormap, stretch mode, title, colorbar toggle.
+4. Set overall figure dimensions (inches), H-spacing, and W-spacing between panels.
+5. Click **READ ALL & RENDER LAYOUT** — data for all slots is read and the multi-panel figure is assembled using `matplotlib.gridspec.GridSpec`.
+6. Click **EXPORT LAYOUT** to save.
+
+Coordinate styling (label rotation, format, decimals, grid) from the Single Map tab applies to all sub-maps in the layout, ensuring visual consistency across panels.
+
+### Export
+
+| Format | DPI | Notes |
+|---|---|---|
+| PNG | 300 | Raster; suitable for journal submission |
+| TIFF | 300 | Raster; lossless for archive |
+| SVG | 150 | Vector; scalable for poster / slide use |
+| PDF | 150 | Vector; suitable for print |
+
+Transparent background exports (PNG / SVG) are fully supported when a transparent background theme is selected.
+
+---
+
+## Codebase Structure
+
+```
+qrviz/
+├── __init__.py          # QGIS plugin entry point (classFactory)
+├── qrviz.py             # QRVIZPlugin class — initGui, unload, run
+├── dialog.py            # Main dialog (1 693 lines)
+│   ├── DiscreteClassRow     # Per-class colour/label widget
+│   ├── LayoutSlotWidget     # Per-slot config widget for layout series
+│   └── QRVIZDialog          # Main QDialog
+│       ├── _build_single_map_tab()
+│       ├── _build_layout_series_tab()
+│       ├── _render_continuous()
+│       ├── _render_discrete()
+│       ├── _render_rgb()
+│       ├── _render_layout()
+│       ├── _style_axes()        # Rotation, tick count, formatters
+│       ├── _make_lon_formatter()
+│       ├── _make_lat_formatter()
+│       └── export_figure() / _export_layout()
+├── colormaps.py         # Custom palette registry (152 lines)
+│   ├── CUSTOM_PALETTES  # 24 domain-specific colormaps
+│   └── COLORMAPS        # Master ordered list (~60 entries)
+├── metadata.txt         # QGIS plugin metadata
+├── icon.png             # Toolbar icon
+└── LICENSE              # GNU GPL v2 or later
 ```
 
-### macOS
+**Total source lines: 1,895** across 4 Python files.
 
-```text
-~/Library/Application Support/QGIS/QGIS3/profiles/default/python/plugins
+---
+
+## Technical Notes
+
+**Raster reading** uses `QgsRasterDataProvider.block()` — the native PyQGIS API — so it respects the layer's CRS, nodata value, and any QGIS-side processing applied to the layer. It does not require `rasterio` or `GDAL` to be installed separately.
+
+**Resolution management:** The `Max pixels (k)` spinbox controls the maximum number of pixels loaded into the preview array. At 1,000 k (= 1,000,000 px), a 10,000 × 10,000 raster is downsampled to approximately 1,000 × 1,000 for the preview. For export-quality rendering, increase this value.
+
+**Live preview** is achieved by caching the NumPy array after the first read and re-calling `_live_update()` on any parameter change signal. The Matplotlib figure is cleared (`fig.clf()`) and redrawn from the cached array, so no I/O occurs during parameter adjustments.
+
+**Coordinate formatters** are implemented as Python closures returned by `_make_lon_formatter()` / `_make_lat_formatter()`, capturing the current format and decimal settings at render time. They are passed to `ax.xaxis.set_major_formatter(mticker.FuncFormatter(...))`.
+
+---
+
+## Contributing
+
+Contributions, bug reports, and feature requests are welcome via the [issue tracker](https://github.com/Defani/QRasterVIZ/issues).
+
+Please follow these guidelines:
+
+- Write code comments in **English**.
+- Follow **PEP 8** style conventions.
+- Do not commit generated files (`*.pyc`, `__pycache__`, `ui_*.py`, `resources_rc.py`).
+- Do not include `.git`, `__MACOSX`, or `.DS_Store` directories in any zip submissions to the QGIS plugin repository.
+- Test on at minimum Windows (OSGeo4W) and Linux before opening a pull request.
+- Ensure the plugin folder name does not repeat the word "plugin".
+
+---
+
+## License
+
+GNU General Public License v2.0 or later. See [LICENSE](LICENSE) for full terms.
+
+This plugin uses Matplotlib and NumPy, which are distributed under the BSD License. PyQGIS and PyQt5 are distributed under the GNU GPL v2.
+
+---
+
+## Citation
+
+If RasterViz contributes to published research, please cite the software as:
+
 ```
-
-3. Restart QGIS.
-4. Enable RasterViz from the Plugin Manager.
-
----
-
-# Quick Start
-
-## Continuous Raster Workflow
-
-1. Load a raster into QGIS.
-2. Open RasterViz.
-3. Select the raster layer.
-4. Choose:
-
-   * Colormap
-   * Stretch method
-   * Percentile or manual range
-5. Adjust histogram boundaries.
-6. Export the final visualization.
-
----
-
-## RGB Composite Workflow
-
-1. Open the RGB tab.
-2. Select:
-
-   * Red band
-   * Green band
-   * Blue band
-3. Configure individual stretches.
-4. Preview the composite.
-5. Export the figure.
-
----
-
-## Classified Raster Workflow
-
-1. Load a classified raster.
-2. Enable discrete rendering.
-3. Scan raster classes automatically.
-4. Assign:
-
-   * Colors
-   * Labels
-   * Decimal precision
-5. Generate publication-ready thematic maps.
-
----
-
-# Use Cases
-
-## Remote Sensing
-
-* Vegetation indices
-* Change detection
-* Multispectral composites
-* Environmental monitoring
-* Mangrove ecosystem analysis
-
----
-
-## Forestry Applications
-
-* Above-ground biomass mapping
-* Forest degradation analysis
-* Canopy density visualization
-* Conservation mapping
-
----
-
-## Environmental Science
-
-* Water quality analysis
-* Coastal monitoring
-* Wetland visualization
-* Ecological spatial analysis
-
----
-
-## Academic Research
-
-RasterViz is suitable for:
-
-* Scientific papers
-* Undergraduate theses
-* Master's dissertations
-* Doctoral research
-* Journal publication figures
-
----
-
-# Performance Optimization
-
-RasterViz incorporates several optimization strategies:
-
-* Cached NumPy raster arrays
-* Efficient Matplotlib rendering
-* Reduced raster re-reading
-* Interactive GUI refresh optimization
-* Lightweight rendering architecture
-
-These optimizations improve usability for large remote sensing datasets.
-
----
-
-# Compatibility
-
-| Component        | Supported                                      |
-| ---------------- | ---------------------------------------------- |
-| QGIS             | 3.x                                            |
-| Python           | 3.x                                            |
-| Operating System | Windows / Linux / macOS                        |
-| Raster Types     | GeoTIFF, IMG, ASC, and compatible GDAL rasters |
-
----
-
-# Official QGIS Plugin Repository
-
-RasterViz is officially available on the QGIS Plugin Repository.
-
-| Information     | Details                                                                            |
-| --------------- | ---------------------------------------------------------------------------------- |
-| Plugin Name     | RasterViz                                                                          |
-| Plugin ID       | 5157                                                                               |
-| QGIS Repository | [https://plugins.qgis.org/plugins/qrviz/](https://plugins.qgis.org/plugins/qrviz/) |
-
----
-
-# Installation via QGIS Plugin Manager
-
-1. Open QGIS.
-2. Navigate to:
-
-```text
-Plugins → Manage and Install Plugins
-```
-
-3. Search for:
-
-```text
-RasterViz
-```
-
-4. Click **Install Plugin**.
-5. Launch RasterViz from the Plugins menu or toolbar.
-
----
-
-# Repository
-
-Official Repository:
-
-```text
-https://github.com/Defani/RasterViz
+Alfitriansyah, D. A. (2026). RasterViz: Scientific Raster Visualization Plugin for QGIS
+(Version 1.1.0) [Software]. https://github.com/Defani/QRasterVIZ
 ```
 
 ---
 
-# Author
-
-**Defani Arman Alfitriansyah**
-
-Remote Sensing and GIS Researcher
-
-Specialization:
-
-* Scientific raster visualization
-* Remote sensing workflows
-* Mangrove ecosystem analysis
-* Google Earth Engine
-* GIS cartography
-
-Email:
-
-```text
-defaniarman@gmail.com
-```
-
----
-
-# License
-
-This project is licensed under the GNU General Public License v3.0 (GPL-3.0).
-
-The GPL license ensures that RasterViz remains free and open-source software, allowing users to study, modify, and redistribute the plugin under the same license terms.
-
-See the LICENSE file for full license details.
-
----
-
-# Citation
-
-If you use RasterViz in academic work, please cite:
-
-```text
-Alfitriansyah, D. A. (2026). RasterViz: Scientific Raster Visualization Plugin for QGIS.
-GitHub Repository: https://github.com/Defani/RasterViz
-```
-
----
-
-# Future Development
-
-Planned future features include:
-
-* Batch rendering system
-* Layout manager integration
-* Advanced annotation tools
-* Multi-panel scientific plotting
-* Additional scientific colormaps
-* Interactive raster statistics
-* Cloud optimized raster support
-* Temporal raster visualization
-
----
-
-# Acknowledgements
-
-RasterViz was inspired by the scientific visualization ecosystem surrounding:
-
-* rasterio
-* matplotlib
-* NumPy
-* PyQGIS
-* Open-source remote sensing workflows
-
-Special thanks to the QGIS and scientific Python communities.
-
----
-
-<div align="center">
-
-## RasterViz
-
-### Bringing scientific raster visualization into an interactive QGIS workflow.
-
-</div>
+<p align="center">
+  Built with PyQGIS · NumPy · Matplotlib · PyQt5 &nbsp;|&nbsp;
+  <a href="https://github.com/Defani/QRasterVIZ">github.com/Defani/QRasterVIZ</a>
+</p>
