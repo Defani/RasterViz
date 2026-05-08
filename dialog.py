@@ -263,7 +263,7 @@ class QRVIZDialog(QDialog):
         super().__init__(parent)
         self.iface = iface
         self.setWindowFlags(Qt.Window)
-        self.setWindowTitle("RasterViz — Scientific Raster Visualization")
+        self.setWindowTitle("RasterViz")
         self.setMinimumSize(1400, 820)
 
         families = QFontDatabase().families()
@@ -1127,9 +1127,12 @@ class QRVIZDialog(QDialog):
         w, h = 250, 24
         pixmap = QPixmap(w, h); painter = QPainter(pixmap)
         try:
-            suffix = "_r" if self.chk_reverse_cmap.isChecked() else ""
-            cmap = plt.get_cmap(cmap_name + suffix)
-        except Exception: cmap = plt.get_cmap("viridis")
+            cmap = plt.get_cmap(cmap_name)
+            if self.chk_reverse_cmap.isChecked():
+                cmap = cmap.reversed()
+        except Exception:
+            cmap = plt.get_cmap("viridis")
+            
         for x in range(w):
             c = cmap(x / max(1, w - 1))
             painter.setPen(QColor(int(c[0] * 255), int(c[1] * 255), int(c[2] * 255)))
@@ -1380,9 +1383,13 @@ class QRVIZDialog(QDialog):
         actual_max = float(valid_data.max()) if len(valid_data) > 0 else vmax
 
         cmap_name = cmap_override if cmap_override else COLORMAPS[self.cmap_idx]
-        if not cmap_override and self.chk_reverse_cmap.isChecked(): cmap_name += "_r"
-        try: cmap = plt.get_cmap(cmap_name).copy()
-        except Exception: cmap = plt.get_cmap("viridis").copy()
+        try:
+            cmap = plt.get_cmap(cmap_name).copy()
+            if not cmap_override and self.chk_reverse_cmap.isChecked():
+                cmap = cmap.reversed()
+        except Exception:
+            cmap = plt.get_cmap("viridis").copy()
+            
         if self.chk_nodata_transp.isChecked(): cmap.set_bad(alpha=0)
 
         im = ax.imshow(arr, cmap=cmap, vmin=vmin, vmax=vmax, extent=plot_ext, interpolation="bilinear", aspect="equal", origin="upper")
@@ -1563,9 +1570,13 @@ class QRVIZDialog(QDialog):
             if np.isclose(vmin, vmax): vmax = vmin + 1
 
             cmap_name = slot.cb_cmap.currentText()
-            if slot.chk_reverse.isChecked(): cmap_name += "_r"
-            try: cmap = plt.get_cmap(cmap_name).copy()
-            except Exception: cmap = plt.get_cmap("viridis").copy()
+            try:
+                cmap = plt.get_cmap(cmap_name).copy()
+                if slot.chk_reverse.isChecked():
+                    cmap = cmap.reversed()
+            except Exception:
+                cmap = plt.get_cmap("viridis").copy()
+            
             cmap.set_bad(alpha=0)
 
             im = ax.imshow(arr, cmap=cmap, vmin=vmin, vmax=vmax, extent=plot_ext, interpolation="bilinear", aspect="equal", origin="upper")
@@ -1684,4 +1695,3 @@ class QRVIZDialog(QDialog):
         self.fig_layout.savefig(path, dpi=dpi, bbox_inches="tight", facecolor=self.fig_layout.get_facecolor(), transparent=("Transparent" in self.l_cb_bg_color.currentText()))
         self.lbl_layout_status.setText(f"Layout exported: {path}")
         QMessageBox.information(self, "Success", f"Layout saved:\n{path}")
-        
