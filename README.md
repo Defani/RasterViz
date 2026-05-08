@@ -1,7 +1,7 @@
 # RasterViz — Scientific Raster Visualization Plugin for QGIS
 
 <p align="left">
-  <img src="https://github.com/user-attachments/assets/872165fe-7ea5-48ab-acf9-200205f19fde" alt="RasterViz Icon" width="96"/>
+  <img src="icon.png" alt="RasterViz Icon" width="96"/>
 </p>
 
 
