@@ -1,54 +1,15 @@
-# RasterViz — Scientific Raster Visualization Plugin for QGIS
+
+# <img src="icon.png" alt="RasterViz Icon" width="56" valign="middle"> RasterViz — Scientific Raster Visualization Plugin for QGIS
 
 <p align="left">
-  <img src="icon.png" alt="RasterViz Icon" width="96"/>
-</p>
-
-
-<p align="left">
+  <a href="https://defani.github.io/QRasterVIZ/"><img src="https://img.shields.io/badge/Plugin_Web_Page-Visit-4f8fff?style=flat-square&logo=google-chrome&logoColor=white" alt="Plugin Web Page"/></a>
+  <a href="https://plugins.qgis.org/"><img src="https://img.shields.io/badge/QGIS_Plugin-Pending_Review-brightgreen?style=flat-square&logo=qgis&logoColor=white" alt="QGIS Plugin"/></a>
   <a href="https://github.com/Defani/QRasterVIZ/releases"><img src="https://img.shields.io/badge/version-1.1.0-blue?style=flat-square" alt="Version"/></a>
   <a href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.html"><img src="https://img.shields.io/badge/license-GPL--2.0--or--later-green?style=flat-square" alt="License"/></a>
-  <a href="https://plugins.qgis.org/"><img src="https://img.shields.io/badge/QGIS-3.x-brightgreen?style=flat-square&logo=qgis" alt="QGIS"/></a>
   <a href="https://github.com/Defani/QRasterVIZ/issues"><img src="https://img.shields.io/badge/issues-open-orange?style=flat-square" alt="Issues"/></a>
 </p>
 
-> **RasterViz** delivers publication-quality raster visualization directly inside QGIS — styled after the aesthetics of `rasterio.show()` — without requiring an external Python environment or Jupyter notebook. The plugin is currently under review by the QGIS plugin team.
-
----
-
-## Table of Contents
-
-- [Overview](#overview)
-- [Key Features](#key-features)
-- [Package Dependencies](#package-dependencies)
-- [Installation](#installation)
-  - [Requirements](#requirements)
-  - [Install via QGIS Plugin Manager (Recommended)](#install-via-qgis-plugin-manager-recommended)
-  - [Install from ZIP](#install-from-zip)
-  - [Install from Source](#install-from-source)
-- [Plugin Interface](#plugin-interface)
-- [Quick Start Tutorial](#quick-start-tutorial)
-  - [1. Open a Raster Layer](#1-open-a-raster-layer)
-  - [2. Configure Stretch](#2-configure-stretch)
-  - [3. Choose a Colormap](#3-choose-a-colormap)
-  - [4. Tune Coordinate Labels](#4-tune-coordinate-labels)
-  - [5. Style the Colorbar](#5-style-the-colorbar)
-  - [6. Export](#6-export)
-- [Feature Reference](#feature-reference)
-  - [Single Band — Continuous Rendering](#single-band--continuous-rendering)
-  - [Discrete / Classified Rendering](#discrete--classified-rendering)
-  - [RGB Three-Band Composite](#rgb-three-band-composite)
-  - [Coordinate Label Control](#coordinate-label-control)
-  - [Colormap Library](#colormap-library)
-  - [Colorbar / Legend Layout](#colorbar--legend-layout)
-  - [Multi-Map Layout Series](#multi-map-layout-series)
-  - [Export](#export)
-- [Codebase Structure](#codebase-structure)
-- [Technical Notes](#technical-notes)
-- [Contributing](#contributing)
-- [License](#license)
-- [Citation](#citation)
-
+> **RasterViz** provides a practical way to create publication-quality raster visualizations styled after `rasterio.show()` directly inside QGIS.
 ---
 
 ## Overview
