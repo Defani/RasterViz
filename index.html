@@ -81,17 +81,8 @@ nav {
 .nav-logo-mark {
   width: 30px;
   height: 30px;
-  border-radius: 7px;
-  background: linear-gradient(135deg, #1a3a7a 0%, #2d5fcc 50%, #4f8fff 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--display);
-  font-size: 12px;
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: -0.5px;
   flex-shrink: 0;
+  object-fit: contain;
 }
 
 .nav-logo span {
@@ -206,7 +197,7 @@ nav {
 .hero-sub {
   font-size: 16px;
   color: var(--text2);
-  max-width: 560px;
+  max-width: 600px;
   line-height: 1.7;
   margin-bottom: 36px;
   font-weight: 300;
@@ -220,6 +211,11 @@ nav {
   background: rgba(79,143,255,0.1);
   padding: 1px 6px;
   border-radius: 4px;
+}
+
+.hero-sub b {
+  color: var(--text);
+  font-weight: 500;
 }
 
 .hero-actions {
@@ -284,7 +280,6 @@ nav {
 }
 .hb-blue { background: rgba(79,143,255,0.1); color: var(--accent2); border: 1px solid rgba(79,143,255,0.2); }
 .hb-green { background: rgba(62,207,142,0.08); color: var(--green2); border: 1px solid rgba(62,207,142,0.2); }
-.hb-amber { background: rgba(245,166,35,0.08); color: #ffc55a; border: 1px solid rgba(245,166,35,0.2); }
 
 /* ── SCREENSHOT STRIP ── */
 .screenshot-wrap {
@@ -659,7 +654,7 @@ code {
   border: 1px solid var(--border);
 }
 
-/* ── QUICK START ── */
+/* ── QUICK START & VIDEOS ── */
 .tutorial-steps {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -703,13 +698,42 @@ code {
 .tutorial-card h3 { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 10px; }
 .tutorial-card p { font-size: 13px; color: var(--text2); line-height: 1.65; margin-bottom: 14px; flex-grow: 1; }
 
+.tut-vid-wrap {
+  position: relative;
+  margin-top: auto;
+  width: 100%;
+}
 .tut-video {
   width: 100%;
   border-radius: 6px;
   border: 1px solid var(--border);
   background: #000;
   display: block;
-  margin-top: auto;
+}
+.fullscreen-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 4px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s, opacity 0.2s;
+  opacity: 0;
+  z-index: 10;
+}
+.tut-vid-wrap:hover .fullscreen-btn {
+  opacity: 1;
+}
+.fullscreen-btn:hover {
+  background: rgba(0,0,0,0.9);
 }
 
 .tut-params {
@@ -765,16 +789,6 @@ code {
 .tree-body .t-py { color: var(--green2); }
 .tree-body .t-cm { color: var(--text3); font-style: italic; }
 .tree-body .t-accent { color: var(--amber); }
-.tree-body .t-num {
-  display: inline-block;
-  background: rgba(245,166,35,0.1);
-  border: 1px solid rgba(245,166,35,0.2);
-  color: var(--amber);
-  padding: 0 5px;
-  border-radius: 3px;
-  font-size: 10px;
-  margin-left: 4px;
-}
 
 /* ── CITATION ── */
 .citation-block {
@@ -806,15 +820,7 @@ footer {
 .footer-left { display: flex; align-items: center; gap: 10px; }
 .footer-logo {
   width: 26px; height: 26px;
-  border-radius: 6px;
-  background: linear-gradient(135deg, #1a3a7a, #4f8fff);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--display);
-  font-size: 10px;
-  font-weight: 700;
-  color: #fff;
+  object-fit: contain;
 }
 .footer-name { font-family: var(--display); font-size: 12.5px; color: var(--text2); font-weight: 700; }
 
@@ -881,7 +887,7 @@ footer {
 
 <nav>
   <a href="#" class="nav-logo">
-    <div class="nav-logo-mark">RV</div>
+    <img src="icon.png" alt="RasterViz" class="nav-logo-mark">
     <span>RasterViz</span>
   </a>
   <ul class="nav-links">
@@ -906,9 +912,7 @@ footer {
   <h1>Publication-quality raster maps<br>directly inside <em>QGIS</em></h1>
 
   <p class="hero-sub">
-    RasterViz renders figures styled after <code>rasterio.show()</code> — with
-    pointed colorbars, geographic coordinate labels, custom palettes, and
-    multi-map layout grids — without a single line of Python.
+    RasterViz menyediakan cara praktis untuk membuat visualisasi raster kelas publikasi ala <code>rasterio.show()</code>. Dibangun sepenuhnya menggunakan <b>PyQGIS, PyQt5, NumPy,</b> dan <b>Matplotlib</b> agar Anda bisa mendesain peta dengan *colormap* kustom dan label koordinat tanpa harus menulis kode apa pun.
   </p>
 
   <div class="hero-actions">
@@ -927,7 +931,6 @@ footer {
     <span class="hero-badge hb-blue">v 1.1.0</span>
     <span class="hero-badge hb-green">GPL-2.0-or-later</span>
     <span class="hero-badge hb-blue">QGIS ≥ 3.0</span>
-    <span class="hero-badge hb-amber">1,895 lines · 4 files</span>
     <span class="hero-badge hb-green">No extra pip install</span>
   </div>
 </section>
@@ -1017,7 +1020,7 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
 <section class="section" id="features">
   <div class="section-label">Features</div>
   <div class="section-title">Every control a researcher needs</div>
-  <p class="section-sub">1,895 lines across 4 Python files. No bloat — every control maps directly to a Matplotlib parameter.</p>
+  <p class="section-sub">No bloat — every control maps directly to a Matplotlib parameter.</p>
 
   <div class="features-grid reveal">
     <div class="feat-card">
@@ -1236,7 +1239,10 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
       <div class="tut-step-label">Step 01</div>
       <h3>Open a Raster Layer</h3>
       <p>Load a single-band GeoTIFF (e.g. NDVI from Sentinel-2) into QGIS. Launch RasterViz from <code>Raster → QRVIZ</code>. Select the layer from the dropdown, set Band: 1, and click <strong>READ DATA &amp; RENDER</strong>.</p>
-      <video src="https://github.com/user-attachments/assets/43229022-5ed2-4978-8b63-0e794f954e4b" autoplay loop muted playsinline class="tut-video"></video>
+      <div class="tut-vid-wrap">
+        <video src="https://github.com/user-attachments/assets/43229022-5ed2-4978-8b63-0e794f954e4b" autoplay loop muted playsinline class="tut-video"></video>
+        <button class="fullscreen-btn" title="Fullscreen" onclick="toggleFullscreen(this.previousElementSibling)">⛶</button>
+      </div>
     </div>
 
     <div class="tutorial-card">
@@ -1256,7 +1262,10 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
       <div class="tut-step-label">Step 03</div>
       <h3>Choose a Colormap</h3>
       <p>Use the ◀ ▶ arrows to cycle through palettes. A colour ramp preview is shown inline. Enable <strong>Reverse</strong> to invert any palette.</p>
-      <video src="https://github.com/user-attachments/assets/9c410ae5-5bf6-426d-8e4b-c6c43d1b9ed4" autoplay loop muted playsinline class="tut-video"></video>
+      <div class="tut-vid-wrap">
+        <video src="https://github.com/user-attachments/assets/9c410ae5-5bf6-426d-8e4b-c6c43d1b9ed4" autoplay loop muted playsinline class="tut-video"></video>
+        <button class="fullscreen-btn" title="Fullscreen" onclick="toggleFullscreen(this.previousElementSibling)">⛶</button>
+      </div>
     </div>
 
     <div class="tutorial-card">
@@ -1264,7 +1273,10 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
       <div class="tut-step-label">Step 04</div>
       <h3>Tune Coordinate Labels</h3>
       <p>In Group 6, set coordinate format, decimal places, tick count, and rotation for X and Y axes independently.</p>
-      <video src="https://github.com/user-attachments/assets/22b17462-122c-447a-a239-de7761c4976c" autoplay loop muted playsinline class="tut-video"></video>
+      <div class="tut-vid-wrap">
+        <video src="https://github.com/user-attachments/assets/22b17462-122c-447a-a239-de7761c4976c" autoplay loop muted playsinline class="tut-video"></video>
+        <button class="fullscreen-btn" title="Fullscreen" onclick="toggleFullscreen(this.previousElementSibling)">⛶</button>
+      </div>
     </div>
 
     <div class="tutorial-card">
@@ -1272,7 +1284,10 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
       <div class="tut-step-label">Step 05</div>
       <h3>Style the Colorbar</h3>
       <p>In Group 7, choose orientation, end style, label, and tick settings. <strong>Both Pointed</strong> replicates the rasterio aesthetic.</p>
-      <video src="https://github.com/user-attachments/assets/649f535d-ab7b-485d-859e-70d888b7b099" autoplay loop muted playsinline class="tut-video"></video>
+      <div class="tut-vid-wrap">
+        <video src="https://github.com/user-attachments/assets/649f535d-ab7b-485d-859e-70d888b7b099" autoplay loop muted playsinline class="tut-video"></video>
+        <button class="fullscreen-btn" title="Fullscreen" onclick="toggleFullscreen(this.previousElementSibling)">⛶</button>
+      </div>
     </div>
 
     <div class="tutorial-card">
@@ -1280,7 +1295,10 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
       <div class="tut-step-label">Step 06</div>
       <h3>Export</h3>
       <p>Click <strong>EXPORT IMAGE</strong> in Group 3. Choose PNG for journal submission at 300 DPI, PDF/SVG for posters and slides.</p>
-      <video src="https://github.com/user-attachments/assets/c7030b7b-450f-4e09-81d7-db49638dab80" autoplay loop muted playsinline class="tut-video"></video>
+      <div class="tut-vid-wrap">
+        <video src="https://github.com/user-attachments/assets/c7030b7b-450f-4e09-81d7-db49638dab80" autoplay loop muted playsinline class="tut-video"></video>
+        <button class="fullscreen-btn" title="Fullscreen" onclick="toggleFullscreen(this.previousElementSibling)">⛶</button>
+      </div>
     </div>
   </div>
 </section>
@@ -1289,7 +1307,7 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
 
 <section class="section" id="codebase">
   <div class="section-label">Codebase</div>
-  <div class="section-title">1,895 lines · 4 Python files</div>
+  <div class="section-title">Clean &amp; Lightweight Architecture</div>
   <p class="section-sub">Clean single-module architecture. No generated UI files, no binary blobs, no compiled resources.</p>
 
   <div class="tree-block reveal">
@@ -1300,9 +1318,9 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
     </div>
     <div class="tree-body">
 <span class="t-dir">qrviz/</span><br>
-├── <span class="t-py">__init__.py</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-cm"># classFactory — QGIS plugin entry point</span> <span class="t-num">8 lines</span><br>
-├── <span class="t-py">qrviz.py</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-cm"># QRVIZPlugin — initGui, unload, run</span> <span class="t-num">42 lines</span><br>
-├── <span class="t-py">dialog.py</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-cm"># Main dialog</span> <span class="t-num">1,693 lines</span><br>
+├── <span class="t-py">__init__.py</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-cm"># classFactory — QGIS plugin entry point</span><br>
+├── <span class="t-py">qrviz.py</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-cm"># QRVIZPlugin — initGui, unload, run</span><br>
+├── <span class="t-py">dialog.py</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-cm"># Main dialog</span><br>
 │&nbsp;&nbsp;&nbsp;├── <span class="t-accent">DiscreteClassRow</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-cm"># Per-class colour/label/decimal widget</span><br>
 │&nbsp;&nbsp;&nbsp;├── <span class="t-accent">LayoutSlotWidget</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-cm"># Per-slot config for layout series</span><br>
 │&nbsp;&nbsp;&nbsp;└── <span class="t-accent">QRVIZDialog</span><br>
@@ -1315,7 +1333,7 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
 │&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── _style_axes() &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-cm"># Rotation, tick count, formatters</span><br>
 │&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── _make_lon_formatter() &nbsp;&nbsp;<span class="t-cm"># DMS/DM/DD/UTM closures</span><br>
 │&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── export_figure() / _export_layout()<br>
-├── <span class="t-py">colormaps.py</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-cm"># Custom palette registry</span> <span class="t-num">152 lines</span><br>
+├── <span class="t-py">colormaps.py</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-cm"># Custom palette registry</span><br>
 │&nbsp;&nbsp;&nbsp;├── CUSTOM_PALETTES &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-cm"># 24 domain-specific colormaps</span><br>
 │&nbsp;&nbsp;&nbsp;└── COLORMAPS &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-cm"># Master list ~60 entries</span><br>
 ├── <span class="t-accent">metadata.txt</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-cm"># QGIS plugin metadata</span><br>
@@ -1341,7 +1359,7 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
 
 <footer>
   <div class="footer-left">
-    <div class="footer-logo">RV</div>
+    <img src="icon.png" alt="RV" class="footer-logo">
     <span class="footer-name">RasterViz</span>
     <span style="font-size:12px;color:var(--text3);margin-left:4px">v1.1.0</span>
   </div>
@@ -1356,6 +1374,17 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
 </footer>
 
 <script>
+/* ── Fullscreen Video Toggle ── */
+function toggleFullscreen(elem) {
+  if (elem.requestFullscreen) {
+    elem.requestFullscreen();
+  } else if (elem.webkitRequestFullscreen) { /* Safari */
+    elem.webkitRequestFullscreen();
+  } else if (elem.msRequestFullscreen) { /* IE11 */
+    elem.msRequestFullscreen();
+  }
+}
+
 function lerp(a,b,t){return a+(b-a)*t}
 function hexToRgb(h){return[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)]}
 function interpColor(stops,t){
