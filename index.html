@@ -43,6 +43,29 @@ body {
   overflow-x: hidden;
 }
 
+/* ── Spectacular Global Transitions ── */
+/* Menambahkan efek transisi mulus dan hover spektakuler untuk semua kartu/tombol */
+a, button, .feat-card, .tutorial-card, .prose-card, .dep-card, .step-num, .export-card, .cmap-card, .nav-logo-mark {
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+}
+.feat-card:hover, .tutorial-card:hover, .prose-card:hover, .dep-card:hover, .export-card:hover {
+  transform: translateY(-6px) scale(1.02) !important;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 20px rgba(79,143,255,0.15) !important;
+  border-color: rgba(79,143,255,0.4) !important;
+  z-index: 2;
+}
+.nav-logo:hover .nav-logo-mark {
+  transform: scale(1.1) rotate(5deg);
+  filter: drop-shadow(0 0 8px rgba(79,143,255,0.6));
+}
+
+/* ── Bilingual System ── */
+.id-only { display: none; }
+body.lang-id .en-only { display: none !important; }
+body.lang-id .id-only { display: block; }
+body.lang-id span.id-only, body.lang-id a.id-only { display: inline; }
+body.lang-id div.id-only.flex { display: flex; }
+
 /* ── Grid noise texture overlay ── */
 body::before {
   content: '';
@@ -123,7 +146,24 @@ nav {
 }
 .nav-btn:hover { opacity: .88; background: var(--accent) !important; }
 
-/* ── HERO ── */
+.lang-btn {
+  margin-left: 12px;
+  padding: 6px 12px;
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.lang-btn:hover { background: var(--border); transform: scale(1.05); }
+
+/* ── HERO & ANIMATED LOGO ── */
 .hero {
   position: relative;
   z-index: 1;
@@ -145,6 +185,69 @@ nav {
     linear-gradient(90deg, rgba(79,143,255,0.04) 1px, transparent 1px);
   background-size: 48px 48px;
   mask-image: radial-gradient(ellipse 70% 80% at 50% 50%, black 20%, transparent 80%);
+  animation: bgPan 40s linear infinite;
+}
+
+@keyframes bgPan {
+  0% { background-position: 0 0; }
+  100% { background-position: 48px 48px; }
+}
+
+/* ── Dynamic Logo Simulation ── */
+.hero-logo-wrapper {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  margin: 0 auto 30px auto;
+  animation: float 6s ease-in-out infinite;
+  z-index: 10;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+.hero-dynamic-logo {
+  width: 100%;
+  height: 100%;
+  /* Fallback black/white base */
+  background: linear-gradient(135deg, #222222 0%, #ffffff 100%);
+  /* MASKING TRICK: Menggunakan icon.png sebagai cetakan */
+  -webkit-mask-image: url('icon.png');
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-image: url('icon.png');
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  transition: background 1.5s ease-in-out, filter 1.5s ease-in-out;
+  filter: drop-shadow(0 0 25px rgba(255,255,255,0.3));
+}
+
+.color-cycle-btn {
+  position: absolute;
+  bottom: -5px;
+  right: -5px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  color: #fff;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+  z-index: 15;
+}
+.color-cycle-btn:hover {
+  transform: scale(1.15) rotate(90deg);
+  background: var(--accent);
+  border-color: #fff;
+  box-shadow: 0 0 15px rgba(79,143,255,0.8);
 }
 
 .badge-pill {
@@ -239,10 +342,9 @@ nav {
   text-decoration: none;
   font-weight: 600;
   font-size: 14px;
-  transition: transform .2s, box-shadow .2s;
   box-shadow: 0 4px 24px rgba(79,143,255,0.3);
 }
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(79,143,255,0.4); }
+.btn-primary:hover { box-shadow: 0 8px 32px rgba(79,143,255,0.6); }
 
 .btn-ghost {
   display: inline-flex;
@@ -256,9 +358,8 @@ nav {
   text-decoration: none;
   font-weight: 500;
   font-size: 14px;
-  transition: color .2s, border-color .2s, background .2s;
 }
-.btn-ghost:hover { color: var(--text); border-color: rgba(99,140,255,0.4); background: var(--surface); }
+.btn-ghost:hover { color: var(--text); background: var(--surface); transform: scale(1.05); }
 
 .hero-badges {
   display: flex;
@@ -298,6 +399,11 @@ nav {
   overflow: hidden;
   background: var(--bg2);
   box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(79,143,255,0.06);
+  transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.5s ease;
+}
+.screenshot-frame:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 40px 100px rgba(0,0,0,0.8), 0 0 0 1px rgba(79,143,255,0.2);
 }
 
 .frame-titlebar {
@@ -386,6 +492,11 @@ main { position: relative; z-index: 1; }
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
+  transition: transform 0.4s ease, border-color 0.4s ease;
+}
+.code-block:hover {
+  transform: scale(1.02);
+  border-color: rgba(79,143,255,0.4);
 }
 
 .code-header {
@@ -468,12 +579,7 @@ code {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 22px 24px;
-  transition: border-color .25s, transform .25s;
   cursor: default;
-}
-.feat-card:hover {
-  border-color: rgba(79,143,255,0.35);
-  transform: translateY(-3px);
 }
 
 .feat-icon {
@@ -484,7 +590,9 @@ code {
   justify-content: center;
   margin-bottom: 14px;
   font-size: 17px;
+  transition: transform 0.3s ease;
 }
+.feat-card:hover .feat-icon { transform: scale(1.2) rotate(5deg); }
 .fi-blue { background: rgba(79,143,255,0.12); }
 .fi-green { background: rgba(62,207,142,0.1); }
 .fi-amber { background: rgba(245,166,35,0.1); }
@@ -533,9 +641,8 @@ code {
   overflow: hidden;
   border: 1px solid var(--border);
   background: var(--bg);
-  transition: border-color .2s, transform .2s;
 }
-.cmap-card:hover { border-color: var(--border2); transform: scale(1.02); }
+.cmap-card:hover { border-color: var(--accent); transform: scale(1.05) translateY(-2px) !important; z-index: 5; position:relative; box-shadow: 0 10px 20px rgba(0,0,0,0.5);}
 .cmap-ramp { height: 28px; width: 100%; display: block; }
 .cmap-info { padding: 7px 10px; }
 .cmap-name { font-family: var(--mono); font-size: 10px; color: var(--text2); font-weight: 500; }
@@ -568,7 +675,9 @@ code {
   justify-content: center;
   font-size: 15px;
   flex-shrink: 0;
+  transition: transform 0.4s;
 }
+.dep-card:hover .dep-icon { transform: rotateY(180deg); }
 
 .dep-body h4 { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
 .dep-body p { font-size: 11.5px; color: var(--text2); line-height: 1.5; }
@@ -601,7 +710,9 @@ code {
   padding: 28px 0;
   border-bottom: 1px solid var(--border);
   position: relative;
+  transition: all 0.4s ease;
 }
+.install-step:hover { background: rgba(255,255,255,0.01); border-radius: 8px; padding-left: 10px; }
 .install-step:last-child { border-bottom: none; }
 
 .step-num {
@@ -619,6 +730,7 @@ code {
   flex-shrink: 0;
   margin-top: 2px;
 }
+.install-step:hover .step-num { background: var(--accent); color: #fff; border-color: var(--accent); transform: scale(1.1); box-shadow: 0 0 15px rgba(79,143,255,0.5);}
 
 .step-body h3 { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
 .step-body p { font-size: 14px; color: var(--text2); line-height: 1.65; margin-bottom: 10px; }
@@ -668,11 +780,9 @@ code {
   padding: 22px 24px;
   position: relative;
   overflow: hidden;
-  transition: border-color .25s;
   display: flex;
   flex-direction: column;
 }
-.tutorial-card:hover { border-color: rgba(79,143,255,.3); }
 
 .tut-num {
   position: absolute;
@@ -684,7 +794,9 @@ code {
   color: rgba(79,143,255,0.05);
   line-height: 1;
   pointer-events: none;
+  transition: color 0.4s;
 }
+.tutorial-card:hover .tut-num { color: rgba(79,143,255,0.15); }
 
 .tut-step-label {
   font-family: var(--mono);
@@ -760,7 +872,9 @@ code {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
+  transition: transform 0.4s ease, border-color 0.4s ease;
 }
+.tree-block:hover { transform: scale(1.01); border-color: rgba(79,143,255,0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
 
 .tree-header {
   background: var(--bg3);
@@ -790,7 +904,7 @@ code {
 .tree-body .t-cm { color: var(--text3); font-style: italic; }
 .tree-body .t-accent { color: var(--amber); }
 
-/* ── CITATION ── */
+/* ── CITATION & ACKNOWLEDGMENTS ── */
 .citation-block {
   background: var(--bg2);
   border: 1px solid var(--border);
@@ -801,7 +915,29 @@ code {
   font-size: 13px;
   color: var(--text2);
   line-height: 1.8;
+  transition: transform 0.4s ease, border-color 0.4s ease;
 }
+.citation-block:hover { transform: translateX(8px); border-color: rgba(79,143,255,0.4); }
+
+.ref-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.ref-list li {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  font-size: 13.5px;
+  color: var(--text2);
+  line-height: 1.6;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+.ref-list li:hover { transform: translateX(8px); border-color: rgba(79,143,255,0.3); background: var(--surface); }
+.ref-list li a { color: var(--accent2); text-decoration: none; }
+.ref-list li a:hover { text-decoration: underline; }
 
 /* ── FOOTER ── */
 footer {
@@ -839,7 +975,7 @@ footer {
 .reveal {
   opacity: 0;
   transform: translateY(22px);
-  transition: opacity .6s ease, transform .6s ease;
+  transition: opacity 0.8s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 .reveal.visible { opacity: 1; transform: translateY(0); }
 
@@ -851,35 +987,11 @@ footer {
   margin: 0 auto;
 }
 
-/* ── EXPORT TABLE ── */
-.export-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  margin-top: 20px;
-}
-.export-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 18px 16px;
-  text-align: center;
-}
-.export-fmt {
-  font-family: var(--display);
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--accent2);
-  margin-bottom: 5px;
-}
-.export-dpi { font-size: 11px; font-family: var(--mono); color: var(--green); margin-bottom: 6px; }
-
 @media (max-width: 900px) {
   .overview-grid { grid-template-columns: 1fr; }
   nav { padding: 0 20px; }
   .nav-links { display: none; }
   .section { padding: 60px 20px; }
-  .export-grid { grid-template-columns: repeat(2, 1fr); }
 }
 </style>
 </head>
@@ -898,21 +1010,37 @@ footer {
     <li><a href="#quickstart">Tutorial</a></li>
     <li><a href="#codebase">Codebase</a></li>
     <li><a href="https://github.com/Defani/QRasterVIZ" target="_blank" class="nav-btn">GitHub ↗</a></li>
+    <li>
+      <button class="lang-btn" onclick="toggleLanguage()" id="lang-toggle-btn">
+        <span class="en-only">🇬🇧 EN</span>
+        <span class="id-only">🇮🇩 ID</span>
+      </button>
+    </li>
   </ul>
 </nav>
 
 <section class="hero">
   <div class="hero-grid"></div>
 
-  <div class="badge-pill">
-    <span class="badge-dot"></span>
-    Under review by QGIS Plugin Team
+  <div class="hero-logo-wrapper reveal visible">
+    <div class="hero-dynamic-logo" id="hero-dynamic-logo"></div>
+    <button class="color-cycle-btn" onclick="nextLogoColor()" title="Simulate Colormaps">✨</button>
   </div>
 
-  <h1>Publication-quality raster maps<br>directly inside <em>QGIS</em></h1>
+  <div class="badge-pill">
+    <span class="badge-dot"></span>
+    <span class="en-only">Under review by QGIS Plugin Team</span>
+    <span class="id-only">Sedang ditinjau oleh Tim Plugin QGIS</span>
+  </div>
 
-  <p class="hero-sub">
-    RasterViz menyediakan cara praktis untuk membuat visualisasi raster kelas publikasi ala <code>rasterio.show()</code>. Dibangun sepenuhnya menggunakan <b>PyQGIS, PyQt5, NumPy,</b> dan <b>Matplotlib</b> agar Anda bisa mendesain peta dengan *colormap* kustom dan label koordinat tanpa harus menulis kode apa pun.
+  <h1 class="en-only">Publication-quality raster maps<br>directly inside <em>QGIS</em></h1>
+  <h1 class="id-only">Peta raster kualitas publikasi<br>langsung di dalam <em>QGIS</em></h1>
+
+  <p class="hero-sub en-only">
+    RasterViz provides a practical way to create publication-quality raster visualizations styled after <code>rasterio.show()</code>. Built entirely using <b>PyQGIS, PyQt5, NumPy,</b> and <b>Matplotlib</b> so you can design maps with custom colormaps and coordinate labels without writing any code.
+  </p>
+  <p class="hero-sub id-only">
+    RasterViz menyediakan cara praktis untuk membuat visualisasi raster kelas publikasi ala <code>rasterio.show()</code>. Dibangun sepenuhnya menggunakan <b>PyQGIS, PyQt5, NumPy,</b> dan <b>Matplotlib</b> agar Anda bisa mendesain peta dengan colormap kustom dan label koordinat tanpa harus menulis kode apa pun.
   </p>
 
   <div class="hero-actions">
@@ -923,7 +1051,8 @@ footer {
       View on GitHub
     </a>
     <a href="#quickstart" class="btn-ghost">
-      Quick Start →
+      <span class="en-only">Quick Start →</span>
+      <span class="id-only">Mulai Cepat →</span>
     </a>
   </div>
 
@@ -951,10 +1080,14 @@ footer {
 
 <section class="section" id="overview">
   <div class="section-label">Overview</div>
-  <div class="section-title">Replace your rasterio scripts<br>with zero lines of code</div>
-  <p class="section-sub">
-    QGIS native symbology is sufficient for quick inspection, but publication-ready
-    figures still require Python. RasterViz closes that gap.
+  <div class="section-title en-only">Replace your rasterio scripts<br>with zero lines of code</div>
+  <div class="section-title id-only">Gantikan skrip rasterio Anda<br>tanpa satu baris kode pun</div>
+  
+  <p class="section-sub en-only">
+    QGIS native symbology is sufficient for quick inspection, but publication-ready figures still require Python. RasterViz closes that gap.
+  </p>
+  <p class="section-sub id-only">
+    Simbologi bawaan QGIS sudah cukup untuk inspeksi cepat, tetapi figur siap publikasi masih sering membutuhkan skrip Python. RasterViz menutup celah tersebut.
   </p>
 
   <div class="overview-grid reveal">
@@ -962,7 +1095,10 @@ footer {
       <div class="code-block">
         <div class="code-header">
           <span class="code-lang">python</span>
-          <span class="code-label cl-before">without RasterViz</span>
+          <span class="code-label cl-before">
+            <span class="en-only">without RasterViz</span>
+            <span class="id-only">tanpa RasterViz</span>
+          </span>
         </div>
         <div class="code-body">
 <span class="tok-kw">import</span> rasterio, matplotlib.pyplot <span class="tok-kw">as</span> plt<br>
@@ -986,30 +1122,48 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
       <div class="code-block" style="margin-top:14px">
         <div class="code-header">
           <span class="code-lang">python</span>
-          <span class="code-label cl-after">with RasterViz</span>
+          <span class="code-label cl-after">
+            <span class="en-only">with RasterViz</span>
+            <span class="id-only">dengan RasterViz</span>
+          </span>
         </div>
         <div class="code-body" style="color:#546e7a;font-style:italic">
-          <span class="tok-cm"># No code needed.<br>
+          <span class="en-only">
+          # No code needed.<br>
           # Open the plugin from the Raster menu,<br>
           # select your layer, click READ DATA &amp; RENDER.<br>
           # Adjust stretch, colormap, colorbar,<br>
-          # and export — all via the GUI.</span>
+          # and export — all via the GUI.
+          </span>
+          <span class="id-only">
+          # Tidak butuh kode.<br>
+          # Buka plugin dari menu Raster,<br>
+          # pilih layer Anda, klik READ DATA &amp; RENDER.<br>
+          # Sesuaikan rentang, colormap, colorbar,<br>
+          # dan ekspor — semuanya via antarmuka grafis.
+          </span>
         </div>
       </div>
     </div>
 
     <div class="overview-prose">
       <div class="prose-card">
-        <h4>Matplotlib renderer embedded in QGIS</h4>
-        <p>Every figure uses the <code>Qt5Agg</code> Matplotlib backend embedded directly in the QGIS dialog — so output is pixel-identical to what you'd get from a Jupyter notebook.</p>
+        <h4 class="en-only">Matplotlib renderer embedded in QGIS</h4>
+        <h4 class="id-only">Mesin Matplotlib tertanam di QGIS</h4>
+        <p class="en-only">Every figure uses the <code>Qt5Agg</code> Matplotlib backend embedded directly in the QGIS dialog — so output is pixel-identical to what you'd get from a Jupyter notebook.</p>
+        <p class="id-only">Setiap figur menggunakan backend Matplotlib <code>Qt5Agg</code> yang tertanam langsung di dialog QGIS — sehingga hasil gambarnya identik dengan apa yang biasa Anda hasilkan dari Jupyter notebook.</p>
       </div>
       <div class="prose-card">
-        <h4>Live preview from cached NumPy array</h4>
-        <p>Band data is read once via <code>QgsRasterDataProvider.block()</code> and cached as a <code>float64</code> array. Every subsequent parameter change — stretch, colormap, rotation — rerenders from cache. No disk I/O on adjustment.</p>
+        <h4 class="en-only">Live preview from cached NumPy array</h4>
+        <h4 class="id-only">Pratinjau langsung dari cache NumPy</h4>
+        <p class="en-only">Band data is read once via <code>QgsRasterDataProvider.block()</code> and cached as a NumPy array. Every subsequent parameter change rerenders from cache. No disk I/O on adjustment.</p>
+        <p class="id-only">Data band dibaca sekali via <code>QgsRasterDataProvider.block()</code> dan disimpan dalam cache array NumPy. Setiap perubahan parameter me-render ulang dari cache. Tanpa beban baca disk berulang.</p>
       </div>
       <div class="prose-card">
-        <h4>No external dependencies</h4>
-        <p>Built entirely on <code>PyQGIS + PyQt5 + NumPy + Matplotlib</code> — all bundled with the standard QGIS installation on Windows (OSGeo4W), Linux, and macOS. Zero pip commands required.</p>
+        <h4 class="en-only">No external dependencies</h4>
+        <h4 class="id-only">Tanpa dependensi eksternal</h4>
+        <p class="en-only">Built entirely on <code>PyQGIS + PyQt5 + NumPy + Matplotlib</code> — all bundled with the standard QGIS installation on Windows (OSGeo4W), Linux, and macOS.</p>
+        <p class="id-only">Dibangun sepenuhnya dengan <code>PyQGIS + PyQt5 + NumPy + Matplotlib</code> — semuanya sudah terbundel di instalasi standar QGIS pada Windows (OSGeo4W), Linux, dan macOS.</p>
       </div>
     </div>
   </div>
@@ -1019,14 +1173,19 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
 
 <section class="section" id="features">
   <div class="section-label">Features</div>
-  <div class="section-title">Every control a researcher needs</div>
-  <p class="section-sub">No bloat — every control maps directly to a Matplotlib parameter.</p>
+  <div class="section-title en-only">Every control a researcher needs</div>
+  <div class="section-title id-only">Semua kontrol yang dibutuhkan peneliti</div>
+  
+  <p class="section-sub en-only">Clean and efficient — every control maps directly to a Matplotlib parameter.</p>
+  <p class="section-sub id-only">Ringkas &amp; Efisien — setiap kontrol langsung memetakan parameter Matplotlib.</p>
 
   <div class="features-grid reveal">
     <div class="feat-card">
       <div class="feat-icon fi-blue">🎨</div>
-      <h3>Stretch Control</h3>
-      <p>Actual min–max, percentile (configurable Pmin/Pmax), or manual vmin/vmax. Stretch boundaries annotated on a separate histogram panel.</p>
+      <h3 class="en-only">Stretch Control</h3>
+      <h3 class="id-only">Kontrol Rentang (Stretch)</h3>
+      <p class="en-only">Actual min–max, percentile (configurable Pmin/Pmax), or manual vmin/vmax. Stretch boundaries annotated on a separate histogram panel.</p>
+      <p class="id-only">Min-max asli, persentil (Pmin/Pmax dapat diatur), atau vmin/vmax manual. Batas rentang dianotasikan pada panel histogram terpisah.</p>
       <div class="feat-tags">
         <span class="feat-tag">Actual Min-Max</span>
         <span class="feat-tag">Percentile</span>
@@ -1036,8 +1195,10 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
 
     <div class="feat-card">
       <div class="feat-icon fi-green">🗺</div>
-      <h3>Coordinate Labels</h3>
-      <p>DMS, DM, Decimal Degree, and UTM/Metre formats. Independent X/Y tick count, font size, decimal places, and rotation (0–360°).</p>
+      <h3 class="en-only">Coordinate Labels</h3>
+      <h3 class="id-only">Label Koordinat</h3>
+      <p class="en-only">DMS, DM, Decimal Degree, and UTM/Metre formats. Independent X/Y tick count, font size, decimal places, and rotation (0–360°).</p>
+      <p class="id-only">Format DMS, DM, Derajat Desimal, dan UTM/Meter. Jumlah tick, ukuran font, desimal, dan rotasi (0–360°) independen untuk sumbu X/Y.</p>
       <div class="feat-tags">
         <span class="feat-tag">DMS</span>
         <span class="feat-tag">DM</span>
@@ -1048,8 +1209,10 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
 
     <div class="feat-card">
       <div class="feat-icon fi-amber">📊</div>
-      <h3>Pointed Colorbar</h3>
-      <p>Horizontal or vertical; both/max/min/neither extension arrows. Position, length, thickness, tick count, tick decimals, and padding — all configurable.</p>
+      <h3 class="en-only">Pointed Colorbar</h3>
+      <h3 class="id-only">Bilah Warna Runcing</h3>
+      <p class="en-only">Horizontal or vertical; both/max/min/neither extension arrows. Position, length, thickness, tick count, tick decimals, and padding — all configurable.</p>
+      <p class="id-only">Horizontal atau vertikal; ujung runcing dua arah/maks/min/persegi. Posisi, panjang, ketebalan, jumlah tick, desimal, dan padding — semua dapat dikustomisasi.</p>
       <div class="feat-tags">
         <span class="feat-tag">Both Pointed</span>
         <span class="feat-tag">Right Pointed</span>
@@ -1059,8 +1222,10 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
 
     <div class="feat-card">
       <div class="feat-icon fi-purple">🗂</div>
-      <h3>Discrete / Classified</h3>
-      <p>Auto-scan gridcodes. Per-class colour via swatch or hex input. Editable labels and decimal places per class. Patch legend replaces colorbar.</p>
+      <h3 class="en-only">Discrete / Classified</h3>
+      <h3 class="id-only">Klasifikasi Diskrit</h3>
+      <p class="en-only">Auto-scan gridcodes. Per-class colour via swatch or hex input. Editable labels and decimal places per class. Patch legend replaces colorbar.</p>
+      <p class="id-only">Pemindaian otomatis gridcode. Warna per kelas via swatch atau hex. Label dan desimal per kelas dapat diedit. Legenda kotak (patch) menggantikan colorbar.</p>
       <div class="feat-tags">
         <span class="feat-tag">Auto scan</span>
         <span class="feat-tag">Per-class colour</span>
@@ -1070,8 +1235,10 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
 
     <div class="feat-card">
       <div class="feat-icon fi-blue">📐</div>
-      <h3>Layout Series</h3>
-      <p>N×M multi-map grid. Each sub-map has independent layer, band, colormap, stretch, title, and colorbar toggle. Assembled via <code>GridSpec</code>.</p>
+      <h3 class="en-only">Layout Series</h3>
+      <h3 class="id-only">Seri Tata Letak</h3>
+      <p class="en-only">N×M multi-map grid. Each sub-map has independent layer, band, colormap, stretch, title, and colorbar toggle. Assembled via <code>GridSpec</code>.</p>
+      <p class="id-only">Grid multi-peta N×M. Tiap sub-peta memiliki layer, band, colormap, stretch, judul, dan colorbar independen. Disatukan menggunakan <code>GridSpec</code>.</p>
       <div class="feat-tags">
         <span class="feat-tag">2×2</span>
         <span class="feat-tag">3×2</span>
@@ -1081,8 +1248,10 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
 
     <div class="feat-card">
       <div class="feat-icon fi-green">📤</div>
-      <h3>High-resolution Export</h3>
-      <p>PNG and TIFF at 300 DPI; SVG and PDF at 150 DPI. Transparent background supported when a transparent theme is selected.</p>
+      <h3 class="en-only">High-resolution Export</h3>
+      <h3 class="id-only">Ekspor Resolusi Tinggi</h3>
+      <p class="en-only">PNG and TIFF at 300 DPI; SVG and PDF at 150 DPI. Transparent background supported when a transparent theme is selected.</p>
+      <p class="id-only">PNG dan TIFF @ 300 DPI; SVG dan PDF @ 150 DPI. Dukungan latar belakang transparan penuh saat tema transparan dipilih.</p>
       <div class="feat-tags">
         <span class="feat-tag">PNG 300 DPI</span>
         <span class="feat-tag">SVG</span>
@@ -1093,8 +1262,10 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
 
     <div class="feat-card">
       <div class="feat-icon fi-amber">🌈</div>
-      <h3>RGB Composite</h3>
-      <p>Three-band composite with independent per-channel stretch. Suitable for Sentinel-2 true-colour (B4/B3/B2) or false-colour composites.</p>
+      <h3 class="en-only">RGB Composite</h3>
+      <h3 class="id-only">Komposit RGB</h3>
+      <p class="en-only">Three-band composite with independent per-channel stretch. Suitable for Sentinel-2 true-colour (B4/B3/B2) or false-colour composites.</p>
+      <p class="id-only">Komposit tiga band dengan kontrol rentang independen tiap saluran. Cocok untuk true-colour Sentinel-2 (B4/B3/B2) atau komposit false-colour.</p>
       <div class="feat-tags">
         <span class="feat-tag">True Colour</span>
         <span class="feat-tag">False Colour</span>
@@ -1104,8 +1275,10 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
 
     <div class="feat-card">
       <div class="feat-icon fi-purple">⚡</div>
-      <h3>Live Preview</h3>
-      <p>NumPy array cached on first read. All downstream parameter signals trigger a <code>fig.clf()</code> + redraw. No disk access on adjustment.</p>
+      <h3 class="en-only">Live Preview</h3>
+      <h3 class="id-only">Pratinjau Langsung</h3>
+      <p class="en-only">NumPy array cached on first read. All downstream parameter signals trigger a <code>fig.clf()</code> + redraw. No disk access on adjustment.</p>
+      <p class="id-only">Array NumPy di-cache pada pembacaan pertama. Sinyal parameter memicu <code>fig.clf()</code> & render ulang. Tidak ada akses disk saat penyesuaian.</p>
       <div class="feat-tags">
         <span class="feat-tag">No re-read</span>
         <span class="feat-tag">Qt signal chain</span>
@@ -1119,13 +1292,20 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
 
 <section class="section" id="colormaps">
   <div class="section-label">Colormaps</div>
-  <div class="section-title">24 domain-specific palettes<br>+ full Matplotlib library</div>
-  <p class="section-sub">All palettes registered via <code>plt.colormaps</code> at plugin startup. Available in normal and reversed form.</p>
+  <div class="section-title en-only">24 domain-specific palettes<br>+ full Matplotlib library</div>
+  <div class="section-title id-only">24 palet khusus domain<br>+ pustaka Matplotlib lengkap</div>
+  
+  <p class="section-sub en-only">All palettes registered via <code>plt.colormaps</code> at plugin startup. Available in normal and reversed form.</p>
+  <p class="section-sub id-only">Semua palet diregistrasikan via <code>plt.colormaps</code> saat plugin dimulai. Tersedia dalam urutan normal dan terbalik (reversed).</p>
 
   <div class="cmap-section reveal">
-    <div style="font-size:13px;color:var(--text2);margin-bottom:4px">
+    <div style="font-size:13px;color:var(--text2);margin-bottom:4px" class="en-only">
       Custom palettes cover vegetation indices, SAR backscatter, mangrove mapping, carbon stock, bathymetry, and more.
       The full Matplotlib library (~60 additional named colormaps) is also accessible via the same ◀ ▶ cycler.
+    </div>
+    <div style="font-size:13px;color:var(--text2);margin-bottom:4px" class="id-only">
+      Palet kustom mencakup indeks vegetasi, backscatter SAR, pemetaan mangrove, stok karbon, batimetri, dan lainnya.
+      Seluruh pustaka Matplotlib (~60 colormap tambahan) juga dapat diakses melalui pemilih ◀ ▶ yang sama.
     </div>
     <div class="cmap-grid" id="cmap-grid"></div>
   </div>
@@ -1135,15 +1315,18 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
 
 <section class="section">
   <div class="section-label">Dependencies</div>
-  <div class="section-title">Zero additional installation</div>
-  <p class="section-sub">Every package ships with the standard QGIS installation on Windows, Linux, and macOS. No pip commands required.</p>
+  <div class="section-title en-only">Zero additional installation</div>
+  <div class="section-title id-only">Tanpa instalasi tambahan</div>
+  
+  <p class="section-sub en-only">Every package ships with the standard QGIS installation on Windows, Linux, and macOS. No pip commands required.</p>
+  <p class="section-sub id-only">Setiap package di bawah ini sudah terbundel dalam instalasi standar QGIS di Windows, Linux, maupun macOS. Tidak butuh perintah pip.</p>
 
   <div class="dep-grid reveal">
     <div class="dep-card">
       <div class="dep-icon">🧱</div>
       <div class="dep-body">
         <h4>PyQGIS</h4>
-        <p><code>qgis.core</code>, <code>qgis.PyQt</code> — layer access, raster data provider, QGIS GUI integration</p>
+        <p><code>qgis.core</code>, <code>qgis.PyQt</code></p>
         <span class="dep-badge">✓ bundled with QGIS</span>
       </div>
     </div>
@@ -1151,7 +1334,7 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
       <div class="dep-icon">🪟</div>
       <div class="dep-body">
         <h4>PyQt5</h4>
-        <p><code>QtWidgets</code>, <code>QtGui</code>, <code>QtCore</code> — all dialog, widget, and layout construction</p>
+        <p><code>QtWidgets</code>, <code>QtGui</code>, <code>QtCore</code></p>
         <span class="dep-badge">✓ bundled with QGIS</span>
       </div>
     </div>
@@ -1159,7 +1342,7 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
       <div class="dep-icon">🔢</div>
       <div class="dep-body">
         <h4>NumPy</h4>
-        <p>Raster array operations, stretch computation, RGBA image assembly, percentile calculation</p>
+        <p>Raster array operations, stretch computation</p>
         <span class="dep-badge">✓ bundled with QGIS</span>
       </div>
     </div>
@@ -1167,7 +1350,7 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
       <div class="dep-icon">📈</div>
       <div class="dep-body">
         <h4>Matplotlib</h4>
-        <p><code>pyplot</code>, <code>colors</code>, <code>ticker</code>, <code>patches</code>, <code>gridspec</code>, <code>backend_qt5agg</code></p>
+        <p><code>pyplot</code>, <code>colors</code>, <code>backend_qt5agg</code></p>
         <span class="dep-badge">✓ bundled with QGIS</span>
       </div>
     </div>
@@ -1178,15 +1361,26 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
 
 <section class="section" id="install">
   <div class="section-label">Installation</div>
-  <div class="section-title">Three ways to install</div>
-  <p class="section-sub">QGIS ≥ 3.0 required. Python ≥ 3.6 (included with QGIS).</p>
+  <div class="section-title en-only">Three ways to install</div>
+  <div class="section-title id-only">Tiga cara instalasi</div>
+  
+  <p class="section-sub en-only">QGIS ≥ 3.0 required. Python ≥ 3.6 (included with QGIS).</p>
+  <p class="section-sub id-only">Membutuhkan QGIS ≥ 3.0 dan Python ≥ 3.6 (sudah termasuk dalam QGIS).</p>
 
   <div class="install-steps reveal">
     <div class="install-step">
       <div class="step-num">1</div>
       <div class="step-body">
-        <h3>Plugin Manager <span style="font-size:12px;font-family:var(--mono);color:var(--green);font-weight:400;margin-left:8px">Recommended — pending approval</span></h3>
-        <p>Once approved in the QGIS plugin repository, search for <code>RasterViz</code> in the Plugin Manager's <em>All</em> tab and click <strong>Install Plugin</strong>. Access via <code>Raster → QRVIZ → QRVIZ — Scientific Raster Visualization</code>.</p>
+        <h3>
+          <span class="en-only">Plugin Manager</span>
+          <span class="id-only">Manajer Plugin</span>
+          <span style="font-size:12px;font-family:var(--mono);color:var(--green);font-weight:400;margin-left:8px">
+            <span class="en-only">Recommended — pending approval</span>
+            <span class="id-only">Disarankan — menunggu persetujuan</span>
+          </span>
+        </h3>
+        <p class="en-only">Once approved in the QGIS plugin repository, search for <code>RasterViz</code> in the Plugin Manager's <em>All</em> tab and click <strong>Install Plugin</strong>. Access via <code>Raster → QRVIZ → QRVIZ — Scientific Raster Visualization</code>.</p>
+        <p class="id-only">Setelah disetujui di repositori plugin QGIS, cari <code>RasterViz</code> di tab <em>All</em> Manajer Plugin lalu klik <strong>Install Plugin</strong>. Akses via menu <code>Raster → QRVIZ → QRVIZ — Scientific Raster Visualization</code>.</p>
         <div class="step-tags">
           <span class="step-tag">Plugins → Manage and Install Plugins</span>
           <span class="step-tag">Search: RasterViz</span>
@@ -1197,8 +1391,11 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
     <div class="install-step">
       <div class="step-num">2</div>
       <div class="step-body">
-        <h3>Install from ZIP</h3>
-        <p>Download the latest release ZIP from the <a href="https://github.com/Defani/QRasterVIZ/releases" style="color:var(--accent2)">Releases page</a>, then use <code>Plugins → Manage and Install Plugins → Install from ZIP</code>.</p>
+        <h3 class="en-only">Install from ZIP</h3>
+        <h3 class="id-only">Instalasi dari ZIP</h3>
+        
+        <p class="en-only">Download the latest release ZIP from the <a href="https://github.com/Defani/QRasterVIZ/releases" style="color:var(--accent2)">Releases page</a>, then use <code>Plugins → Manage and Install Plugins → Install from ZIP</code>.</p>
+        <p class="id-only">Unduh ZIP rilis terbaru dari <a href="https://github.com/Defani/QRasterVIZ/releases" style="color:var(--accent2)">Halaman Releases</a>, lalu gunakan <code>Plugins → Manage and Install Plugins → Install from ZIP</code>.</p>
         <div class="step-tags">
           <span class="step-tag">github.com/Defani/QRasterVIZ/releases</span>
           <span class="step-tag">Install from ZIP</span>
@@ -1209,7 +1406,9 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
     <div class="install-step">
       <div class="step-num">3</div>
       <div class="step-body">
-        <h3>Install from Source</h3>
+        <h3 class="en-only">Install from Source</h3>
+        <h3 class="id-only">Instalasi dari Source Code</h3>
+        
         <div class="code-snippet">
 <span class="cm"># Clone the repository</span><br>
 <span class="kw">git</span> clone https://github.com/Defani/QRasterVIZ.git<br><br>
@@ -1220,7 +1419,8 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
 <span class="cm"># macOS</span><br>
 <span class="kw">cp</span> -r QRasterVIZ/qrviz <span class="path">~/Library/Application Support/QGIS/QGIS3/profiles/default/python/plugins/qrviz</span>
         </div>
-        <p style="margin-top:10px;font-size:13px;color:var(--text2)">Then in QGIS: <code>Plugins → Manage and Install Plugins → Installed</code> — tick <strong>QRVIZ</strong> to activate.</p>
+        <p style="margin-top:10px;font-size:13px;color:var(--text2)" class="en-only">Then in QGIS: <code>Plugins → Manage and Install Plugins → Installed</code> — tick <strong>QRVIZ</strong> to activate.</p>
+        <p style="margin-top:10px;font-size:13px;color:var(--text2)" class="id-only">Lalu di QGIS: Buka menu <code>Plugins → Manage and Install Plugins → Installed</code> — centang kotak <strong>QRVIZ</strong> untuk mengaktifkan.</p>
       </div>
     </div>
   </div>
@@ -1230,15 +1430,20 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
 
 <section class="section" id="quickstart">
   <div class="section-label">Quick Start</div>
-  <div class="section-title">Six steps to a publication figure</div>
-  <p class="section-sub">From raw GeoTIFF to export-ready PNG at 300 DPI. No scripting required.</p>
+  <div class="section-title en-only">Six steps to a publication figure</div>
+  <div class="section-title id-only">Enam langkah menuju figur publikasi</div>
+  
+  <p class="section-sub en-only">From raw GeoTIFF to export-ready PNG at 300 DPI. No scripting required.</p>
+  <p class="section-sub id-only">Dari GeoTIFF mentah hingga PNG 300 DPI siap ekspor. Tanpa coding sama sekali.</p>
 
   <div class="tutorial-steps reveal">
     <div class="tutorial-card">
       <div class="tut-num">1</div>
       <div class="tut-step-label">Step 01</div>
-      <h3>Open a Raster Layer</h3>
-      <p>Load a single-band GeoTIFF (e.g. NDVI from Sentinel-2) into QGIS. Launch RasterViz from <code>Raster → QRVIZ</code>. Select the layer from the dropdown, set Band: 1, and click <strong>READ DATA &amp; RENDER</strong>.</p>
+      <h3 class="en-only">Open a Raster Layer</h3>
+      <h3 class="id-only">Buka Layer Raster</h3>
+      <p class="en-only">Load a single-band GeoTIFF (e.g. NDVI from Sentinel-2) into QGIS. Launch RasterViz from <code>Raster → QRVIZ</code>. Select the layer from the dropdown, set Band: 1, and click <strong>READ DATA &amp; RENDER</strong>.</p>
+      <p class="id-only">Muat GeoTIFF single-band ke QGIS. Buka RasterViz dari <code>Raster → QRVIZ</code>. Pilih layer, atur Band: 1, lalu klik <strong>READ DATA &amp; RENDER</strong>.</p>
       <div class="tut-vid-wrap">
         <video src="https://github.com/user-attachments/assets/43229022-5ed2-4978-8b63-0e794f954e4b" autoplay loop muted playsinline class="tut-video"></video>
         <button class="fullscreen-btn" title="Fullscreen" onclick="toggleFullscreen(this.previousElementSibling)">⛶</button>
@@ -1248,8 +1453,10 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
     <div class="tutorial-card">
       <div class="tut-num">2</div>
       <div class="tut-step-label">Step 02</div>
-      <h3>Configure Stretch</h3>
-      <p>In Group 2 → Continuous tab, choose a stretch mode. Percentile is recommended for most remote sensing data.</p>
+      <h3 class="en-only">Configure Stretch</h3>
+      <h3 class="id-only">Atur Stretch (Rentang)</h3>
+      <p class="en-only">In Group 2 → Continuous tab, choose a stretch mode. Percentile is recommended for most remote sensing data.</p>
+      <p class="id-only">Pada Grup 2 → tab Continuous, pilih mode peregangan. Persentil sangat disarankan untuk sebagian besar data penginderaan jauh.</p>
       <div class="tut-params">
         <div class="tut-param"><span class="tut-param-key">Mode</span><span class="tut-param-val">Percentile</span></div>
         <div class="tut-param"><span class="tut-param-key">Pmin</span><span class="tut-param-val">2</span></div>
@@ -1260,8 +1467,10 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
     <div class="tutorial-card">
       <div class="tut-num">3</div>
       <div class="tut-step-label">Step 03</div>
-      <h3>Choose a Colormap</h3>
-      <p>Use the ◀ ▶ arrows to cycle through palettes. A colour ramp preview is shown inline. Enable <strong>Reverse</strong> to invert any palette.</p>
+      <h3 class="en-only">Choose a Colormap</h3>
+      <h3 class="id-only">Pilih Colormap</h3>
+      <p class="en-only">Use the ◀ ▶ arrows to cycle through palettes. A colour ramp preview is shown inline. Enable <strong>Reverse</strong> to invert any palette.</p>
+      <p class="id-only">Gunakan panah ◀ ▶ untuk menelusuri palet. Centang <strong>Reverse</strong> untuk membalik urutan palet warna.</p>
       <div class="tut-vid-wrap">
         <video src="https://github.com/user-attachments/assets/9c410ae5-5bf6-426d-8e4b-c6c43d1b9ed4" autoplay loop muted playsinline class="tut-video"></video>
         <button class="fullscreen-btn" title="Fullscreen" onclick="toggleFullscreen(this.previousElementSibling)">⛶</button>
@@ -1271,8 +1480,10 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
     <div class="tutorial-card">
       <div class="tut-num">4</div>
       <div class="tut-step-label">Step 04</div>
-      <h3>Tune Coordinate Labels</h3>
-      <p>In Group 6, set coordinate format, decimal places, tick count, and rotation for X and Y axes independently.</p>
+      <h3 class="en-only">Tune Coordinate Labels</h3>
+      <h3 class="id-only">Sesuaikan Label Koordinat</h3>
+      <p class="en-only">In Group 6, set coordinate format, decimal places, tick count, and rotation for X and Y axes independently.</p>
+      <p class="id-only">Di Grup 6, atur format koordinat, jumlah desimal, jumlah tick, dan rotasi untuk sumbu X dan Y secara independen.</p>
       <div class="tut-vid-wrap">
         <video src="https://github.com/user-attachments/assets/22b17462-122c-447a-a239-de7761c4976c" autoplay loop muted playsinline class="tut-video"></video>
         <button class="fullscreen-btn" title="Fullscreen" onclick="toggleFullscreen(this.previousElementSibling)">⛶</button>
@@ -1282,8 +1493,10 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
     <div class="tutorial-card">
       <div class="tut-num">5</div>
       <div class="tut-step-label">Step 05</div>
-      <h3>Style the Colorbar</h3>
-      <p>In Group 7, choose orientation, end style, label, and tick settings. <strong>Both Pointed</strong> replicates the rasterio aesthetic.</p>
+      <h3 class="en-only">Style the Colorbar</h3>
+      <h3 class="id-only">Modifikasi Colorbar</h3>
+      <p class="en-only">In Group 7, choose orientation, end style, label, and tick settings. <strong>Both Pointed</strong> replicates the rasterio aesthetic.</p>
+      <p class="id-only">Di Grup 7, pilih orientasi, gaya ujung, dan pengaturan tick. Gaya <strong>Both Pointed</strong> mereplikasi estetika rasterio.</p>
       <div class="tut-vid-wrap">
         <video src="https://github.com/user-attachments/assets/649f535d-ab7b-485d-859e-70d888b7b099" autoplay loop muted playsinline class="tut-video"></video>
         <button class="fullscreen-btn" title="Fullscreen" onclick="toggleFullscreen(this.previousElementSibling)">⛶</button>
@@ -1293,8 +1506,10 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
     <div class="tutorial-card">
       <div class="tut-num">6</div>
       <div class="tut-step-label">Step 06</div>
-      <h3>Export</h3>
-      <p>Click <strong>EXPORT IMAGE</strong> in Group 3. Choose PNG for journal submission at 300 DPI, PDF/SVG for posters and slides.</p>
+      <h3 class="en-only">Export</h3>
+      <h3 class="id-only">Ekspor Gambar</h3>
+      <p class="en-only">Click <strong>EXPORT IMAGE</strong> in Group 3. Choose PNG for journal submission at 300 DPI, PDF/SVG for posters and slides.</p>
+      <p class="id-only">Klik <strong>EXPORT IMAGE</strong> di Grup 3. Pilih format PNG untuk jurnal pada 300 DPI, atau PDF/SVG untuk poster.</p>
       <div class="tut-vid-wrap">
         <video src="https://github.com/user-attachments/assets/c7030b7b-450f-4e09-81d7-db49638dab80" autoplay loop muted playsinline class="tut-video"></video>
         <button class="fullscreen-btn" title="Fullscreen" onclick="toggleFullscreen(this.previousElementSibling)">⛶</button>
@@ -1307,8 +1522,11 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
 
 <section class="section" id="codebase">
   <div class="section-label">Codebase</div>
-  <div class="section-title">Clean &amp; Lightweight Architecture</div>
-  <p class="section-sub">Clean single-module architecture. No generated UI files, no binary blobs, no compiled resources.</p>
+  <div class="section-title en-only">Clean &amp; Lightweight Architecture</div>
+  <div class="section-title id-only">Arsitektur Bersih &amp; Ringan</div>
+  
+  <p class="section-sub en-only">Clean single-module architecture. No generated UI files, no binary blobs, no compiled resources.</p>
+  <p class="section-sub id-only">Arsitektur modul tunggal yang bersih. Tidak ada file UI otomatis, gumpalan biner, maupun resource yang di-*compile*.</p>
 
   <div class="tree-block reveal">
     <div class="tree-header">
@@ -1345,10 +1563,40 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
 
 <div class="divider"></div>
 
+<section class="section" id="acknowledgments">
+  <div class="section-label">Acknowledgments</div>
+  <div class="section-title en-only">Standing on the Shoulders of Giants</div>
+  <div class="section-title id-only">Penghargaan &amp; Referensi</div>
+  
+  <p class="section-sub en-only" style="margin-bottom:24px">RasterViz deeply respects and acknowledges the following foundational open-source projects. This plugin would not exist without their powerful APIs and vibrant communities.</p>
+  <p class="section-sub id-only" style="margin-bottom:24px">RasterViz sangat menghormati dan mengakui proyek-proyek sumber terbuka berikut. Plugin ini tidak mungkin ada tanpa ekosistem dan pustaka luar biasa yang mereka bangun.</p>
+  
+  <ul class="ref-list reveal">
+    <li>
+      <strong>QGIS Development Team.</strong> QGIS Geographic Information System. Open Source Geospatial Foundation Project. <a href="http://qgis.osgeo.org" target="_blank">http://qgis.osgeo.org</a>
+    </li>
+    <li>
+      <strong>Matplotlib:</strong> Hunter, J. D. (2007). Matplotlib: A 2D graphics environment. <em>Computing in Science &amp; Engineering</em>, 9(3), 90-95. <a href="https://doi.org/10.1109/MCSE.2007.55" target="_blank">10.1109/MCSE.2007.55</a>
+    </li>
+    <li>
+      <strong>NumPy:</strong> Harris, C. R., Millman, K. J., van der Walt, S. J., et al. (2020). Array programming with NumPy. <em>Nature</em>, 585, 357–362. <a href="https://doi.org/10.1038/s41586-020-2649-2" target="_blank">10.1038/s41586-020-2649-2</a>
+    </li>
+    <li>
+      <strong>PyQt5:</strong> Riverbank Computing Limited. PyQt Reference Guide. <a href="https://www.riverbankcomputing.com/software/pyqt/" target="_blank">Riverbank Computing</a>
+    </li>
+  </ul>
+</section>
+
+<div class="divider"></div>
+
 <section class="section">
   <div class="section-label">Citation</div>
-  <div class="section-title">Cite in your research</div>
-  <p class="section-sub" style="margin-bottom:24px">If RasterViz contributes to published research, please cite the software as:</p>
+  <div class="section-title en-only">Cite in your research</div>
+  <div class="section-title id-only">Sitasi dalam riset Anda</div>
+  
+  <p class="section-sub en-only" style="margin-bottom:24px">If RasterViz contributes to published research, please cite the software as:</p>
+  <p class="section-sub id-only" style="margin-bottom:24px">Jika RasterViz berkontribusi pada publikasi riset Anda, mohon sitasi perangkat lunak ini dengan format:</p>
+  
   <div class="citation-block reveal">
     Alfitriansyah, D. A. (2026). <em>RasterViz: Scientific Raster Visualization Plugin for QGIS</em><br>
     (Version 1.1.0) [Software]. <a href="https://github.com/Defani/QRasterVIZ" style="color:var(--accent2)">https://github.com/Defani/QRasterVIZ</a>
@@ -1374,6 +1622,40 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
 </footer>
 
 <script>
+/* ── Language Toggle ── */
+function toggleLanguage() {
+  document.body.classList.toggle('lang-id');
+}
+
+/* ── Animated Hero Logo Cycler ── */
+const logoGradients = [
+  { bg: 'linear-gradient(135deg, #333333 0%, #ffffff 100%)', shadow: 'rgba(255,255,255,0.3)' }, // Black/White
+  { bg: 'linear-gradient(135deg, #d73027 0%, #fee08b 50%, #1a9850 100%)', shadow: 'rgba(26,152,80,0.5)' }, // RdYlGn
+  { bg: 'linear-gradient(135deg, #000004 0%, #cb4679 50%, #f0f921 100%)', shadow: 'rgba(203,70,121,0.5)' }, // Inferno
+  { bg: 'linear-gradient(135deg, #00204d 0%, #55c5d8 50%, #d5f5f5 100%)', shadow: 'rgba(85,197,216,0.5)' }, // Ocean
+  { bg: 'linear-gradient(135deg, #4f8fff 0%, #3ecf8e 100%)', shadow: 'rgba(79,143,255,0.6)' }  // RasterViz Accent
+];
+let currentGradientIdx = 0;
+let colorInterval;
+
+function applyLogoColor(index) {
+  const logo = document.getElementById('hero-dynamic-logo');
+  if(!logo) return;
+  logo.style.background = logoGradients[index].bg;
+  logo.style.filter = `drop-shadow(0 0 25px ${logoGradients[index].shadow})`;
+}
+
+function nextLogoColor() {
+  currentGradientIdx = (currentGradientIdx + 1) % logoGradients.length;
+  applyLogoColor(currentGradientIdx);
+  resetColorInterval();
+}
+
+function resetColorInterval() {
+  clearInterval(colorInterval);
+  colorInterval = setInterval(nextLogoColor, 3000);
+}
+
 /* ── Fullscreen Video Toggle ── */
 function toggleFullscreen(elem) {
   if (elem.requestFullscreen) {
@@ -1458,6 +1740,8 @@ document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
 
 /* init */
 window.addEventListener('load',()=>{
+  applyLogoColor(0);
+  resetColorInterval();
   buildCmapGrid();
 });
 </script>
