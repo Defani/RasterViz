@@ -44,11 +44,10 @@ body {
 }
 
 /* ── Spectacular Global Transitions ── */
-/* Menambahkan efek transisi mulus dan hover spektakuler untuk semua kartu/tombol */
-a, button, .feat-card, .tutorial-card, .prose-card, .dep-card, .step-num, .export-card, .cmap-card, .nav-logo-mark {
+a, button, .feat-card, .tutorial-card, .dep-card, .step-num, .export-card, .cmap-card, .nav-logo-mark {
   transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
 }
-.feat-card:hover, .tutorial-card:hover, .prose-card:hover, .dep-card:hover, .export-card:hover {
+.feat-card:hover, .tutorial-card:hover, .dep-card:hover, .export-card:hover {
   transform: translateY(-6px) scale(1.02) !important;
   box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 20px rgba(79,143,255,0.15) !important;
   border-color: rgba(79,143,255,0.4) !important;
@@ -163,7 +162,7 @@ nav {
 }
 .lang-btn:hover { background: var(--border); transform: scale(1.05); }
 
-/* ── HERO & ANIMATED LOGO ── */
+/* ── HERO ── */
 .hero {
   position: relative;
   z-index: 1;
@@ -191,63 +190,6 @@ nav {
 @keyframes bgPan {
   0% { background-position: 0 0; }
   100% { background-position: 48px 48px; }
-}
-
-/* ── Dynamic Logo Simulation ── */
-.hero-logo-wrapper {
-  position: relative;
-  width: 140px;
-  height: 140px;
-  margin: 0 auto 30px auto;
-  animation: float 6s ease-in-out infinite;
-  z-index: 10;
-}
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-12px); }
-}
-
-.hero-dynamic-logo {
-  width: 100%;
-  height: 100%;
-  /* Fallback black/white base */
-  background: linear-gradient(135deg, #222222 0%, #ffffff 100%);
-  /* MASKING TRICK: Menggunakan icon.png sebagai cetakan */
-  -webkit-mask-image: url('icon.png');
-  -webkit-mask-size: contain;
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-image: url('icon.png');
-  mask-size: contain;
-  mask-repeat: no-repeat;
-  mask-position: center;
-  transition: background 1.5s ease-in-out, filter 1.5s ease-in-out;
-  filter: drop-shadow(0 0 25px rgba(255,255,255,0.3));
-}
-
-.color-cycle-btn {
-  position: absolute;
-  bottom: -5px;
-  right: -5px;
-  background: var(--surface2);
-  border: 1px solid var(--border2);
-  color: #fff;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.6);
-  z-index: 15;
-}
-.color-cycle-btn:hover {
-  transform: scale(1.15) rotate(90deg);
-  background: var(--accent);
-  border-color: #fff;
-  box-shadow: 0 0 15px rgba(79,143,255,0.8);
 }
 
 .badge-pill {
@@ -479,94 +421,6 @@ main { position: relative; z-index: 1; }
   font-weight: 300;
 }
 
-/* ── OVERVIEW CODE BLOCK ── */
-.overview-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  align-items: start;
-}
-
-.code-block {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  transition: transform 0.4s ease, border-color 0.4s ease;
-}
-.code-block:hover {
-  transform: scale(1.02);
-  border-color: rgba(79,143,255,0.4);
-}
-
-.code-header {
-  background: var(--bg3);
-  padding: 8px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid var(--border);
-}
-.code-lang {
-  font-family: var(--mono);
-  font-size: 10.5px;
-  color: var(--text3);
-  letter-spacing: .5px;
-}
-.code-label {
-  font-size: 10px;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-family: var(--mono);
-}
-.cl-before { background: rgba(245,166,35,0.1); color: #ffc55a; border: 1px solid rgba(245,166,35,0.2); }
-.cl-after { background: rgba(62,207,142,0.1); color: var(--green2); border: 1px solid rgba(62,207,142,0.2); }
-
-.code-body {
-  padding: 18px 20px;
-  font-family: var(--mono);
-  font-size: 12px;
-  line-height: 1.8;
-  color: var(--text2);
-}
-.tok-kw { color: #c792ea; }
-.tok-fn { color: #82aaff; }
-.tok-str { color: #c3e88d; }
-.tok-cm { color: #546e7a; font-style: italic; }
-.tok-num { color: #f78c6c; }
-
-.overview-prose {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-.prose-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px 22px;
-  border-left: 3px solid var(--accent);
-}
-.prose-card h4 {
-  font-size: 14px;
-  font-weight: 600;
-  color: #fff;
-  margin-bottom: 6px;
-}
-.prose-card p {
-  font-size: 13px;
-  color: var(--text2);
-  line-height: 1.65;
-}
-code {
-  font-family: var(--mono);
-  font-size: 12px;
-  color: var(--accent2);
-  background: rgba(79,143,255,0.1);
-  padding: 1px 5px;
-  border-radius: 3px;
-}
-
 /* ── FEATURES GRID ── */
 .features-grid {
   display: grid;
@@ -782,6 +636,7 @@ code {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  cursor: pointer; /* Makes the whole card clickable */
 }
 
 .tut-num {
@@ -814,39 +669,33 @@ code {
   position: relative;
   margin-top: auto;
   width: 100%;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--border);
 }
 .tut-video {
   width: 100%;
-  border-radius: 6px;
-  border: 1px solid var(--border);
   background: #000;
   display: block;
 }
-.fullscreen-btn {
+
+/* Visual cue to click and play fullscreen */
+.play-overlay {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  background: rgba(0,0,0,0.6);
-  color: #fff;
-  border: 1px solid rgba(255,255,255,0.2);
-  border-radius: 4px;
-  width: 28px;
-  height: 28px;
+  inset: 0;
+  background: rgba(10,14,26,0.3);
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background 0.2s, opacity 0.2s;
   opacity: 0;
+  transition: opacity 0.3s;
+  color: #fff;
+  font-family: var(--display);
+  font-size: 32px;
   z-index: 10;
+  backdrop-filter: blur(2px);
 }
-.tut-vid-wrap:hover .fullscreen-btn {
-  opacity: 1;
-}
-.fullscreen-btn:hover {
-  background: rgba(0,0,0,0.9);
-}
+.tutorial-card:hover .play-overlay { opacity: 1; }
 
 .tut-params {
   display: flex;
@@ -865,6 +714,66 @@ code {
 }
 .tut-param-key { font-family: var(--mono); color: var(--text3); }
 .tut-param-val { font-family: var(--mono); color: var(--green2); font-weight: 500; }
+
+/* ── VIDEO MODAL (FULLSCREEN TRANSITION) ── */
+.video-modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(10, 14, 26, 0.95);
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.video-modal.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+.video-modal-content {
+  width: 90%;
+  max-width: 1200px;
+  transform: scale(0.85);
+  transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.9);
+  border: 1px solid var(--border2);
+}
+.video-modal.active .video-modal-content {
+  transform: scale(1);
+}
+.video-modal video {
+  width: 100%;
+  display: block;
+  background: #000;
+}
+.video-modal-close {
+  position: absolute;
+  top: 30px;
+  left: 40px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 100px;
+  font-family: var(--mono);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.video-modal-close:hover {
+  background: var(--accent);
+  border-color: #fff;
+  transform: translateX(-5px);
+}
 
 /* ── CODEBASE ── */
 .tree-block {
@@ -988,7 +897,6 @@ footer {
 }
 
 @media (max-width: 900px) {
-  .overview-grid { grid-template-columns: 1fr; }
   nav { padding: 0 20px; }
   .nav-links { display: none; }
   .section { padding: 60px 20px; }
@@ -1003,7 +911,6 @@ footer {
     <span>RasterViz</span>
   </a>
   <ul class="nav-links">
-    <li><a href="#overview">Overview</a></li>
     <li><a href="#features">Features</a></li>
     <li><a href="#colormaps">Colormaps</a></li>
     <li><a href="#install">Install</a></li>
@@ -1021,11 +928,6 @@ footer {
 
 <section class="hero">
   <div class="hero-grid"></div>
-
-  <div class="hero-logo-wrapper reveal visible">
-    <div class="hero-dynamic-logo" id="hero-dynamic-logo"></div>
-    <button class="color-cycle-btn" onclick="nextLogoColor()" title="Simulate Colormaps">✨</button>
-  </div>
 
   <div class="badge-pill">
     <span class="badge-dot"></span>
@@ -1077,99 +979,6 @@ footer {
 </div>
 
 <main>
-
-<section class="section" id="overview">
-  <div class="section-label">Overview</div>
-  <div class="section-title en-only">Replace your rasterio scripts<br>with zero lines of code</div>
-  <div class="section-title id-only">Gantikan skrip rasterio Anda<br>tanpa satu baris kode pun</div>
-  
-  <p class="section-sub en-only">
-    QGIS native symbology is sufficient for quick inspection, but publication-ready figures still require Python. RasterViz closes that gap.
-  </p>
-  <p class="section-sub id-only">
-    Simbologi bawaan QGIS sudah cukup untuk inspeksi cepat, tetapi figur siap publikasi masih sering membutuhkan skrip Python. RasterViz menutup celah tersebut.
-  </p>
-
-  <div class="overview-grid reveal">
-    <div>
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-lang">python</span>
-          <span class="code-label cl-before">
-            <span class="en-only">without RasterViz</span>
-            <span class="id-only">tanpa RasterViz</span>
-          </span>
-        </div>
-        <div class="code-body">
-<span class="tok-kw">import</span> rasterio, matplotlib.pyplot <span class="tok-kw">as</span> plt<br>
-<span class="tok-kw">from</span> rasterio.plot <span class="tok-kw">import</span> show<br>
-<span class="tok-kw">import</span> numpy <span class="tok-kw">as</span> np<br><br>
-src = rasterio.<span class="tok-fn">open</span>(<span class="tok-str">"ndvi.tif"</span>)<br>
-arr = src.<span class="tok-fn">read</span>(<span class="tok-num">1</span>).astype(<span class="tok-str">'float32'</span>)<br>
-arr[arr == src.nodata] = np.nan<br><br>
-vmin = np.<span class="tok-fn">nanpercentile</span>(arr, <span class="tok-num">2</span>)<br>
-vmax = np.<span class="tok-fn">nanpercentile</span>(arr, <span class="tok-num">98</span>)<br><br>
-fig, ax = plt.<span class="tok-fn">subplots</span>(figsize=(<span class="tok-num">10</span>,<span class="tok-num">8</span>))<br>
-im = ax.<span class="tok-fn">imshow</span>(arr, cmap=<span class="tok-str">"RdYlGn"</span>,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vmin=vmin, vmax=vmax)<br>
-cb = fig.<span class="tok-fn">colorbar</span>(im, ax=ax,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;extend=<span class="tok-str">"both"</span>)<br>
-cb.<span class="tok-fn">set_label</span>(<span class="tok-str">"NDVI"</span>)<br>
-ax.<span class="tok-fn">set_title</span>(<span class="tok-str">"NDVI Map"</span>)<br>
-plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>, dpi=<span class="tok-num">300</span>)
-        </div>
-      </div>
-      <div class="code-block" style="margin-top:14px">
-        <div class="code-header">
-          <span class="code-lang">python</span>
-          <span class="code-label cl-after">
-            <span class="en-only">with RasterViz</span>
-            <span class="id-only">dengan RasterViz</span>
-          </span>
-        </div>
-        <div class="code-body" style="color:#546e7a;font-style:italic">
-          <span class="en-only">
-          # No code needed.<br>
-          # Open the plugin from the Raster menu,<br>
-          # select your layer, click READ DATA &amp; RENDER.<br>
-          # Adjust stretch, colormap, colorbar,<br>
-          # and export — all via the GUI.
-          </span>
-          <span class="id-only">
-          # Tidak butuh kode.<br>
-          # Buka plugin dari menu Raster,<br>
-          # pilih layer Anda, klik READ DATA &amp; RENDER.<br>
-          # Sesuaikan rentang, colormap, colorbar,<br>
-          # dan ekspor — semuanya via antarmuka grafis.
-          </span>
-        </div>
-      </div>
-    </div>
-
-    <div class="overview-prose">
-      <div class="prose-card">
-        <h4 class="en-only">Matplotlib renderer embedded in QGIS</h4>
-        <h4 class="id-only">Mesin Matplotlib tertanam di QGIS</h4>
-        <p class="en-only">Every figure uses the <code>Qt5Agg</code> Matplotlib backend embedded directly in the QGIS dialog — so output is pixel-identical to what you'd get from a Jupyter notebook.</p>
-        <p class="id-only">Setiap figur menggunakan backend Matplotlib <code>Qt5Agg</code> yang tertanam langsung di dialog QGIS — sehingga hasil gambarnya identik dengan apa yang biasa Anda hasilkan dari Jupyter notebook.</p>
-      </div>
-      <div class="prose-card">
-        <h4 class="en-only">Live preview from cached NumPy array</h4>
-        <h4 class="id-only">Pratinjau langsung dari cache NumPy</h4>
-        <p class="en-only">Band data is read once via <code>QgsRasterDataProvider.block()</code> and cached as a NumPy array. Every subsequent parameter change rerenders from cache. No disk I/O on adjustment.</p>
-        <p class="id-only">Data band dibaca sekali via <code>QgsRasterDataProvider.block()</code> dan disimpan dalam cache array NumPy. Setiap perubahan parameter me-render ulang dari cache. Tanpa beban baca disk berulang.</p>
-      </div>
-      <div class="prose-card">
-        <h4 class="en-only">No external dependencies</h4>
-        <h4 class="id-only">Tanpa dependensi eksternal</h4>
-        <p class="en-only">Built entirely on <code>PyQGIS + PyQt5 + NumPy + Matplotlib</code> — all bundled with the standard QGIS installation on Windows (OSGeo4W), Linux, and macOS.</p>
-        <p class="id-only">Dibangun sepenuhnya dengan <code>PyQGIS + PyQt5 + NumPy + Matplotlib</code> — semuanya sudah terbundel di instalasi standar QGIS pada Windows (OSGeo4W), Linux, dan macOS.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="divider"></div>
 
 <section class="section" id="features">
   <div class="section-label">Features</div>
@@ -1433,11 +1242,11 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
   <div class="section-title en-only">Six steps to a publication figure</div>
   <div class="section-title id-only">Enam langkah menuju figur publikasi</div>
   
-  <p class="section-sub en-only">From raw GeoTIFF to export-ready PNG at 300 DPI. No scripting required.</p>
-  <p class="section-sub id-only">Dari GeoTIFF mentah hingga PNG 300 DPI siap ekspor. Tanpa coding sama sekali.</p>
+  <p class="section-sub en-only">From raw GeoTIFF to export-ready PNG at 300 DPI. Click any card below to play the tutorial video in full screen.</p>
+  <p class="section-sub id-only">Dari GeoTIFF mentah hingga PNG 300 DPI siap ekspor. Klik kartu di bawah ini untuk memutar video tutorial dalam layar penuh.</p>
 
   <div class="tutorial-steps reveal">
-    <div class="tutorial-card">
+    <div class="tutorial-card" onclick="openVideoModal('https://github.com/user-attachments/assets/43229022-5ed2-4978-8b63-0e794f954e4b')">
       <div class="tut-num">1</div>
       <div class="tut-step-label">Step 01</div>
       <h3 class="en-only">Open a Raster Layer</h3>
@@ -1446,11 +1255,11 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
       <p class="id-only">Muat GeoTIFF single-band ke QGIS. Buka RasterViz dari <code>Raster → QRVIZ</code>. Pilih layer, atur Band: 1, lalu klik <strong>READ DATA &amp; RENDER</strong>.</p>
       <div class="tut-vid-wrap">
         <video src="https://github.com/user-attachments/assets/43229022-5ed2-4978-8b63-0e794f954e4b" autoplay loop muted playsinline class="tut-video"></video>
-        <button class="fullscreen-btn" title="Fullscreen" onclick="toggleFullscreen(this.previousElementSibling)">⛶</button>
+        <div class="play-overlay">▶</div>
       </div>
     </div>
 
-    <div class="tutorial-card">
+    <div class="tutorial-card" onclick="openVideoModal('https://github.com/user-attachments/assets/43229022-5ed2-4978-8b63-0e794f954e4b')">
       <div class="tut-num">2</div>
       <div class="tut-step-label">Step 02</div>
       <h3 class="en-only">Configure Stretch</h3>
@@ -1464,7 +1273,7 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
       </div>
     </div>
 
-    <div class="tutorial-card">
+    <div class="tutorial-card" onclick="openVideoModal('https://github.com/user-attachments/assets/9c410ae5-5bf6-426d-8e4b-c6c43d1b9ed4')">
       <div class="tut-num">3</div>
       <div class="tut-step-label">Step 03</div>
       <h3 class="en-only">Choose a Colormap</h3>
@@ -1473,11 +1282,11 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
       <p class="id-only">Gunakan panah ◀ ▶ untuk menelusuri palet. Centang <strong>Reverse</strong> untuk membalik urutan palet warna.</p>
       <div class="tut-vid-wrap">
         <video src="https://github.com/user-attachments/assets/9c410ae5-5bf6-426d-8e4b-c6c43d1b9ed4" autoplay loop muted playsinline class="tut-video"></video>
-        <button class="fullscreen-btn" title="Fullscreen" onclick="toggleFullscreen(this.previousElementSibling)">⛶</button>
+        <div class="play-overlay">▶</div>
       </div>
     </div>
 
-    <div class="tutorial-card">
+    <div class="tutorial-card" onclick="openVideoModal('https://github.com/user-attachments/assets/22b17462-122c-447a-a239-de7761c4976c')">
       <div class="tut-num">4</div>
       <div class="tut-step-label">Step 04</div>
       <h3 class="en-only">Tune Coordinate Labels</h3>
@@ -1486,11 +1295,11 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
       <p class="id-only">Di Grup 6, atur format koordinat, jumlah desimal, jumlah tick, dan rotasi untuk sumbu X dan Y secara independen.</p>
       <div class="tut-vid-wrap">
         <video src="https://github.com/user-attachments/assets/22b17462-122c-447a-a239-de7761c4976c" autoplay loop muted playsinline class="tut-video"></video>
-        <button class="fullscreen-btn" title="Fullscreen" onclick="toggleFullscreen(this.previousElementSibling)">⛶</button>
+        <div class="play-overlay">▶</div>
       </div>
     </div>
 
-    <div class="tutorial-card">
+    <div class="tutorial-card" onclick="openVideoModal('https://github.com/user-attachments/assets/649f535d-ab7b-485d-859e-70d888b7b099')">
       <div class="tut-num">5</div>
       <div class="tut-step-label">Step 05</div>
       <h3 class="en-only">Style the Colorbar</h3>
@@ -1499,11 +1308,11 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
       <p class="id-only">Di Grup 7, pilih orientasi, gaya ujung, dan pengaturan tick. Gaya <strong>Both Pointed</strong> mereplikasi estetika rasterio.</p>
       <div class="tut-vid-wrap">
         <video src="https://github.com/user-attachments/assets/649f535d-ab7b-485d-859e-70d888b7b099" autoplay loop muted playsinline class="tut-video"></video>
-        <button class="fullscreen-btn" title="Fullscreen" onclick="toggleFullscreen(this.previousElementSibling)">⛶</button>
+        <div class="play-overlay">▶</div>
       </div>
     </div>
 
-    <div class="tutorial-card">
+    <div class="tutorial-card" onclick="openVideoModal('https://github.com/user-attachments/assets/c7030b7b-450f-4e09-81d7-db49638dab80')">
       <div class="tut-num">6</div>
       <div class="tut-step-label">Step 06</div>
       <h3 class="en-only">Export</h3>
@@ -1512,11 +1321,22 @@ plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>,
       <p class="id-only">Klik <strong>EXPORT IMAGE</strong> di Grup 3. Pilih format PNG untuk jurnal pada 300 DPI, atau PDF/SVG untuk poster.</p>
       <div class="tut-vid-wrap">
         <video src="https://github.com/user-attachments/assets/c7030b7b-450f-4e09-81d7-db49638dab80" autoplay loop muted playsinline class="tut-video"></video>
-        <button class="fullscreen-btn" title="Fullscreen" onclick="toggleFullscreen(this.previousElementSibling)">⛶</button>
+        <div class="play-overlay">▶</div>
       </div>
     </div>
   </div>
 </section>
+
+<div class="video-modal" id="video-modal">
+  <button class="video-modal-close" onclick="closeVideoModal()">
+    <span>←</span>
+    <span class="en-only">Back</span>
+    <span class="id-only">Kembali</span>
+  </button>
+  <div class="video-modal-content">
+    <video id="modal-video-player" controls autoplay playsinline></video>
+  </div>
+</div>
 
 <div class="divider"></div>
 
@@ -1627,44 +1447,21 @@ function toggleLanguage() {
   document.body.classList.toggle('lang-id');
 }
 
-/* ── Animated Hero Logo Cycler ── */
-const logoGradients = [
-  { bg: 'linear-gradient(135deg, #333333 0%, #ffffff 100%)', shadow: 'rgba(255,255,255,0.3)' }, // Black/White
-  { bg: 'linear-gradient(135deg, #d73027 0%, #fee08b 50%, #1a9850 100%)', shadow: 'rgba(26,152,80,0.5)' }, // RdYlGn
-  { bg: 'linear-gradient(135deg, #000004 0%, #cb4679 50%, #f0f921 100%)', shadow: 'rgba(203,70,121,0.5)' }, // Inferno
-  { bg: 'linear-gradient(135deg, #00204d 0%, #55c5d8 50%, #d5f5f5 100%)', shadow: 'rgba(85,197,216,0.5)' }, // Ocean
-  { bg: 'linear-gradient(135deg, #4f8fff 0%, #3ecf8e 100%)', shadow: 'rgba(79,143,255,0.6)' }  // RasterViz Accent
-];
-let currentGradientIdx = 0;
-let colorInterval;
-
-function applyLogoColor(index) {
-  const logo = document.getElementById('hero-dynamic-logo');
-  if(!logo) return;
-  logo.style.background = logoGradients[index].bg;
-  logo.style.filter = `drop-shadow(0 0 25px ${logoGradients[index].shadow})`;
+/* ── Fullscreen Video Modal Logic ── */
+function openVideoModal(videoSrc) {
+  const modal = document.getElementById('video-modal');
+  const player = document.getElementById('modal-video-player');
+  player.src = videoSrc;
+  modal.classList.add('active');
+  player.play();
 }
 
-function nextLogoColor() {
-  currentGradientIdx = (currentGradientIdx + 1) % logoGradients.length;
-  applyLogoColor(currentGradientIdx);
-  resetColorInterval();
-}
-
-function resetColorInterval() {
-  clearInterval(colorInterval);
-  colorInterval = setInterval(nextLogoColor, 3000);
-}
-
-/* ── Fullscreen Video Toggle ── */
-function toggleFullscreen(elem) {
-  if (elem.requestFullscreen) {
-    elem.requestFullscreen();
-  } else if (elem.webkitRequestFullscreen) { /* Safari */
-    elem.webkitRequestFullscreen();
-  } else if (elem.msRequestFullscreen) { /* IE11 */
-    elem.msRequestFullscreen();
-  }
+function closeVideoModal() {
+  const modal = document.getElementById('video-modal');
+  const player = document.getElementById('modal-video-player');
+  modal.classList.remove('active');
+  player.pause();
+  player.src = '';
 }
 
 function lerp(a,b,t){return a+(b-a)*t}
@@ -1740,8 +1537,6 @@ document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
 
 /* init */
 window.addEventListener('load',()=>{
-  applyLogoColor(0);
-  resetColorInterval();
   buildCmapGrid();
 });
 </script>
