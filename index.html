@@ -1,0 +1,1755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RasterViz — Scientific Raster Visualization Plugin for QGIS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0e1a;
+  --bg2: #0f1525;
+  --bg3: #151c30;
+  --surface: #1a2340;
+  --surface2: #1f2a4a;
+  --border: rgba(99,140,255,0.12);
+  --border2: rgba(99,140,255,0.22);
+  --accent: #4f8fff;
+  --accent2: #7eb8ff;
+  --green: #3ecf8e;
+  --green2: #6fffba;
+  --amber: #f5a623;
+  --text: #e8edf8;
+  --text2: #8fa3c8;
+  --text3: #5a7099;
+  --mono: 'DM Mono', 'Space Mono', monospace;
+  --sans: 'DM Sans', system-ui, sans-serif;
+  --display: 'Space Mono', monospace;
+  --radius: 10px;
+  --radius-sm: 6px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ── Grid noise texture overlay ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(79,143,255,0.08) 0%, transparent 60%),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  background: rgba(10,14,26,0.88);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  margin-right: auto;
+}
+
+.nav-logo-mark {
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  background: linear-gradient(135deg, #1a3a7a 0%, #2d5fcc 50%, #4f8fff 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--display);
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.5px;
+  flex-shrink: 0;
+}
+
+.nav-logo span {
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.3px;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 12.5px;
+  color: var(--text2);
+  text-decoration: none;
+  padding: 5px 12px;
+  border-radius: 5px;
+  transition: color .2s, background .2s;
+  font-weight: 400;
+}
+.nav-links a:hover { color: var(--text); background: var(--surface); }
+
+.nav-btn {
+  margin-left: 12px;
+  padding: 6px 16px !important;
+  background: var(--accent) !important;
+  color: #fff !important;
+  border-radius: 6px !important;
+  font-weight: 600 !important;
+  font-size: 12.5px !important;
+  transition: opacity .2s !important;
+}
+.nav-btn:hover { opacity: .88; background: var(--accent) !important; }
+
+/* ── HERO ── */
+.hero {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 120px 40px 80px;
+  overflow: hidden;
+}
+
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(79,143,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(79,143,255,0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 70% 80% at 50% 50%, black 20%, transparent 80%);
+}
+
+.badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: 100px;
+  border: 1px solid rgba(62,207,142,0.3);
+  background: rgba(62,207,142,0.06);
+  font-size: 12px;
+  color: var(--green2);
+  font-family: var(--mono);
+  margin-bottom: 28px;
+  animation: fadeUp 0.6s ease both;
+}
+
+.badge-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: pulse 2s ease infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .5; transform: scale(.8); }
+}
+
+.hero h1 {
+  font-family: var(--display);
+  font-size: clamp(28px, 5vw, 52px);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -1px;
+  color: #fff;
+  max-width: 780px;
+  margin-bottom: 20px;
+  animation: fadeUp .7s .08s ease both;
+}
+
+.hero h1 em {
+  font-style: normal;
+  background: linear-gradient(90deg, #4f8fff, #7eb8ff, #3ecf8e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-size: 16px;
+  color: var(--text2);
+  max-width: 560px;
+  line-height: 1.7;
+  margin-bottom: 36px;
+  font-weight: 300;
+  animation: fadeUp .7s .14s ease both;
+}
+
+.hero-sub code {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--accent2);
+  background: rgba(79,143,255,0.1);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 60px;
+  animation: fadeUp .7s .2s ease both;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 24px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  transition: transform .2s, box-shadow .2s;
+  box-shadow: 0 4px 24px rgba(79,143,255,0.3);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(79,143,255,0.4); }
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 24px;
+  background: transparent;
+  color: var(--text2);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  transition: color .2s, border-color .2s, background .2s;
+}
+.btn-ghost:hover { color: var(--text); border-color: rgba(99,140,255,0.4); background: var(--surface); }
+
+.hero-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  animation: fadeUp .7s .26s ease both;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-family: var(--mono);
+  font-weight: 500;
+}
+.hb-blue { background: rgba(79,143,255,0.1); color: var(--accent2); border: 1px solid rgba(79,143,255,0.2); }
+.hb-green { background: rgba(62,207,142,0.08); color: var(--green2); border: 1px solid rgba(62,207,142,0.2); }
+.hb-amber { background: rgba(245,166,35,0.08); color: #ffc55a; border: 1px solid rgba(245,166,35,0.2); }
+
+/* ── SCREENSHOT STRIP ── */
+.screenshot-wrap {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
+  animation: fadeUp .8s .3s ease both;
+}
+
+.screenshot-frame {
+  border-radius: 12px;
+  border: 1px solid var(--border2);
+  overflow: hidden;
+  background: var(--bg2);
+  box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(79,143,255,0.06);
+}
+
+.frame-titlebar {
+  background: #0f1525;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.frame-dot { width: 10px; height: 10px; border-radius: 50%; }
+.fd-r { background: #ff5f57; }
+.fd-y { background: #febc2e; }
+.fd-g { background: #28c840; }
+
+.frame-title {
+  margin: 0 auto;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text3);
+  letter-spacing: .5px;
+}
+
+.plugin-ui {
+  display: grid;
+  grid-template-columns: 270px 1fr 280px;
+  min-height: 400px;
+  font-size: 12px;
+}
+
+.ui-panel {
+  padding: 10px;
+  overflow: hidden;
+}
+.ui-panel.left { border-right: 1px solid var(--border); background: #0d1422; }
+.ui-panel.centre { background: #121926; }
+.ui-panel.right { border-left: 1px solid var(--border); background: #0d1422; }
+
+.ui-grp {
+  border: 1px solid rgba(79,143,255,0.15);
+  border-radius: 7px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+.ui-grp-hd {
+  background: rgba(79,143,255,0.07);
+  padding: 5px 9px;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #7eb8ff;
+  letter-spacing: .4px;
+  border-bottom: 1px solid rgba(79,143,255,0.12);
+  font-family: var(--mono);
+}
+.ui-grp-bd { padding: 8px 9px; display: flex; flex-direction: column; gap: 5px; }
+
+.ui-row { display: flex; align-items: center; gap: 5px; }
+.ui-lbl { font-size: 10px; color: var(--text3); min-width: 52px; flex-shrink: 0; }
+.ui-inp {
+  flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 3px; padding: 2px 6px; font-size: 10px; color: var(--text2);
+  font-family: var(--mono);
+}
+.ui-inp-sm { width: 40px; flex: none; }
+.ui-sel {
+  flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 3px; padding: 2px 5px; font-size: 10px; color: var(--text2);
+}
+.ui-btn {
+  width: 100%; padding: 5px; text-align: center; font-size: 10.5px; font-weight: 600;
+  border-radius: 4px; background: rgba(79,143,255,0.2); color: #7eb8ff;
+  border: 1px solid rgba(79,143,255,0.3); cursor: pointer; font-family: var(--mono);
+}
+.ui-btn.pri { background: rgba(29,78,216,0.6); color: #93c5fd; border-color: #3b82f6; }
+.ui-check { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--text2); }
+.ui-check-box { width: 11px; height: 11px; border: 1px solid rgba(79,143,255,0.4); border-radius: 2px; background: rgba(79,143,255,0.2); flex-shrink: 0; }
+
+/* canvas area */
+.canvas-area {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.mpl-bar {
+  background: rgba(0,0,0,0.3);
+  border-bottom: 1px solid var(--border);
+  padding: 4px 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 10px;
+  color: var(--text3);
+}
+.raster-preview {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+.cbar-strip {
+  height: 30px;
+  padding: 4px 20px 0;
+  position: relative;
+}
+.cbar-inner {
+  height: 14px;
+  border-radius: 2px;
+  position: relative;
+}
+.cbar-inner::before {
+  content: '';
+  position: absolute;
+  left: -9px; top: 0;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-right: 9px solid #1a2a3a;
+}
+.cbar-inner::after {
+  content: '';
+  position: absolute;
+  right: -9px; top: 0;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-left: 9px solid #0d4a1a;
+}
+.cbar-ticks {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 0;
+  font-size: 8.5px;
+  color: var(--text3);
+  font-family: var(--mono);
+  margin-top: 2px;
+}
+.status-bar {
+  background: rgba(0,0,0,0.4);
+  padding: 3px 10px;
+  font-size: 9.5px;
+  color: var(--text3);
+  font-family: var(--mono);
+  border-top: 1px solid var(--border);
+}
+
+/* ── MAIN LAYOUT ── */
+main { position: relative; z-index: 1; }
+
+.section {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 80px 40px;
+}
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--green);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-label::before {
+  content: '';
+  width: 20px; height: 1px;
+  background: var(--green);
+}
+
+.section-title {
+  font-family: var(--display);
+  font-size: clamp(22px, 3vw, 34px);
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
+  margin-bottom: 14px;
+  letter-spacing: -0.5px;
+}
+
+.section-sub {
+  font-size: 15px;
+  color: var(--text2);
+  max-width: 540px;
+  line-height: 1.7;
+  margin-bottom: 48px;
+  font-weight: 300;
+}
+
+/* ── OVERVIEW CODE BLOCK ── */
+.overview-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.code-block {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.code-header {
+  background: var(--bg3);
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+.code-lang {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--text3);
+  letter-spacing: .5px;
+}
+.code-label {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: var(--mono);
+}
+.cl-before { background: rgba(245,166,35,0.1); color: #ffc55a; border: 1px solid rgba(245,166,35,0.2); }
+.cl-after { background: rgba(62,207,142,0.1); color: var(--green2); border: 1px solid rgba(62,207,142,0.2); }
+
+.code-body {
+  padding: 18px 20px;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--text2);
+}
+.tok-kw { color: #c792ea; }
+.tok-fn { color: #82aaff; }
+.tok-str { color: #c3e88d; }
+.tok-cm { color: #546e7a; font-style: italic; }
+.tok-num { color: #f78c6c; }
+.tok-sep { color: var(--border2); display: block; border-top: 1px dashed var(--border); margin: 10px 0; padding-top: 10px; font-size: 10px; text-align: center; letter-spacing: 2px; color: var(--text3); }
+
+.overview-prose {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.prose-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  border-left: 3px solid var(--accent);
+}
+.prose-card h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 6px;
+}
+.prose-card p {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.65;
+}
+code {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--accent2);
+  background: rgba(79,143,255,0.1);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+/* ── FEATURES GRID ── */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.feat-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  transition: border-color .25s, transform .25s;
+  cursor: default;
+}
+.feat-card:hover {
+  border-color: rgba(79,143,255,0.35);
+  transform: translateY(-3px);
+}
+
+.feat-icon {
+  width: 36px; height: 36px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+  font-size: 17px;
+}
+.fi-blue { background: rgba(79,143,255,0.12); }
+.fi-green { background: rgba(62,207,142,0.1); }
+.fi-amber { background: rgba(245,166,35,0.1); }
+.fi-purple { background: rgba(167,139,250,0.1); }
+
+.feat-card h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 7px;
+  font-family: var(--sans);
+}
+.feat-card p {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.6;
+}
+.feat-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 12px;
+}
+.feat-tag {
+  font-size: 10px;
+  font-family: var(--mono);
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--text3);
+  border: 1px solid var(--border);
+}
+
+/* ── COLORMAPS ── */
+.cmap-section { background: var(--bg2); border-radius: 14px; padding: 36px 40px; border: 1px solid var(--border); }
+
+.cmap-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.cmap-card {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  transition: border-color .2s, transform .2s;
+}
+.cmap-card:hover { border-color: var(--border2); transform: scale(1.02); }
+.cmap-ramp { height: 28px; width: 100%; display: block; }
+.cmap-info { padding: 7px 10px; }
+.cmap-name { font-family: var(--mono); font-size: 10px; color: var(--text2); font-weight: 500; }
+.cmap-domain { font-size: 10px; color: var(--text3); margin-top: 1px; }
+
+/* ── DEPENDENCIES ── */
+.dep-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.dep-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.dep-icon {
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  background: rgba(79,143,255,0.1);
+  border: 1px solid rgba(79,143,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+.dep-body h4 { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+.dep-body p { font-size: 11.5px; color: var(--text2); line-height: 1.5; }
+
+.dep-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-family: var(--mono);
+  padding: 2px 8px;
+  border-radius: 100px;
+  background: rgba(62,207,142,0.1);
+  color: var(--green2);
+  border: 1px solid rgba(62,207,142,0.2);
+  margin-top: 6px;
+}
+
+/* ── INSTALLATION ── */
+.install-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.install-step {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 20px;
+  padding: 28px 0;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+.install-step:last-child { border-bottom: none; }
+
+.step-num {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 2px solid var(--border2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent2);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.step-body h3 { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+.step-body p { font-size: 14px; color: var(--text2); line-height: 1.65; margin-bottom: 10px; }
+
+.code-snippet {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.8;
+  overflow-x: auto;
+}
+.code-snippet .cm { color: #546e7a; }
+.code-snippet .kw { color: #c792ea; }
+.code-snippet .path { color: var(--green2); }
+
+.step-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+.step-tag {
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-family: var(--mono);
+  background: var(--surface);
+  color: var(--text3);
+  border: 1px solid var(--border);
+}
+
+/* ── QUICK START ── */
+.tutorial-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.tutorial-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color .25s;
+}
+.tutorial-card:hover { border-color: rgba(79,143,255,.3); }
+
+.tut-num {
+  position: absolute;
+  top: -8px;
+  right: 16px;
+  font-family: var(--display);
+  font-size: 60px;
+  font-weight: 700;
+  color: rgba(79,143,255,0.05);
+  line-height: 1;
+  pointer-events: none;
+}
+
+.tut-step-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--accent2);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.tutorial-card h3 { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 10px; }
+.tutorial-card p { font-size: 13px; color: var(--text2); line-height: 1.65; }
+
+.tut-params {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 12px;
+}
+
+.tut-param {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 8px;
+  background: var(--surface);
+  border-radius: 4px;
+  font-size: 11px;
+}
+.tut-param-key { font-family: var(--mono); color: var(--text3); }
+.tut-param-val { font-family: var(--mono); color: var(--green2); font-weight: 500; }
+
+/* ── CODEBASE ── */
+.tree-block {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.tree-header {
+  background: var(--bg3);
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.tree-header span {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text3);
+}
+
+.tree-body {
+  padding: 20px 22px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 2;
+  color: var(--text2);
+}
+
+.tree-body .t-dir { color: #7eb8ff; }
+.tree-body .t-py { color: var(--green2); }
+.tree-body .t-cm { color: var(--text3); font-style: italic; }
+.tree-body .t-accent { color: var(--amber); }
+.tree-body .t-num {
+  display: inline-block;
+  background: rgba(245,166,35,0.1);
+  border: 1px solid rgba(245,166,35,0.2);
+  color: var(--amber);
+  padding: 0 5px;
+  border-radius: 3px;
+  font-size: 10px;
+  margin-left: 4px;
+}
+
+/* ── CITATION ── */
+.citation-block {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.8;
+}
+
+/* ── FOOTER ── */
+footer {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--border);
+  background: var(--bg2);
+  padding: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: gap;
+  gap: 16px;
+}
+
+.footer-left { display: flex; align-items: center; gap: 10px; }
+.footer-logo {
+  width: 26px; height: 26px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #1a3a7a, #4f8fff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--display);
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff;
+}
+.footer-name { font-family: var(--display); font-size: 12.5px; color: var(--text2); font-weight: 700; }
+
+.footer-links { display: flex; gap: 20px; align-items: center; }
+.footer-links a { font-size: 12px; color: var(--text3); text-decoration: none; transition: color .2s; }
+.footer-links a:hover { color: var(--text2); }
+
+.footer-right { font-size: 11.5px; color: var(--text3); font-family: var(--mono); }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ── DIVIDER ── */
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border2), transparent);
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+/* ── STRETCH TABLE ── */
+.stretch-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 14px;
+  font-size: 13px;
+}
+.stretch-table th {
+  text-align: left;
+  font-size: 11px;
+  font-family: var(--mono);
+  color: var(--text3);
+  letter-spacing: .5px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  text-transform: uppercase;
+}
+.stretch-table td {
+  padding: 9px 12px;
+  color: var(--text2);
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.stretch-table td:first-child { font-family: var(--mono); color: var(--accent2); font-size: 12px; }
+.stretch-table tr:last-child td { border-bottom: none; }
+
+/* ── EXPORT TABLE ── */
+.export-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 20px;
+}
+.export-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 16px;
+  text-align: center;
+}
+.export-fmt {
+  font-family: var(--display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent2);
+  margin-bottom: 5px;
+}
+.export-dpi { font-size: 11px; font-family: var(--mono); color: var(--green); margin-bottom: 6px; }
+.export-note { font-size: 11px; color: var(--text3); }
+
+@media (max-width: 900px) {
+  .overview-grid { grid-template-columns: 1fr; }
+  .plugin-ui { grid-template-columns: 1fr; }
+  .ui-panel.left, .ui-panel.right { display: none; }
+  nav { padding: 0 20px; }
+  .nav-links { display: none; }
+  .section { padding: 60px 20px; }
+  .export-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-mark">RV</div>
+    <span>RasterViz</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#colormaps">Colormaps</a></li>
+    <li><a href="#install">Install</a></li>
+    <li><a href="#quickstart">Tutorial</a></li>
+    <li><a href="#codebase">Codebase</a></li>
+    <li><a href="https://github.com/Defani/QRasterVIZ" target="_blank" class="nav-btn">GitHub ↗</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+
+  <div class="badge-pill">
+    <span class="badge-dot"></span>
+    Under review by QGIS Plugin Team
+  </div>
+
+  <h1>Publication-quality raster maps<br>directly inside <em>QGIS</em></h1>
+
+  <p class="hero-sub">
+    RasterViz renders figures styled after <code>rasterio.show()</code> — with
+    pointed colorbars, geographic coordinate labels, custom palettes, and
+    multi-map layout grids — without a single line of Python.
+  </p>
+
+  <div class="hero-actions">
+    <a href="https://github.com/Defani/QRasterVIZ/releases" class="btn-primary" target="_blank">
+      ↓ Download ZIP
+    </a>
+    <a href="https://github.com/Defani/QRasterVIZ" class="btn-ghost" target="_blank">
+      View on GitHub
+    </a>
+    <a href="#quickstart" class="btn-ghost">
+      Quick Start →
+    </a>
+  </div>
+
+  <div class="hero-badges">
+    <span class="hero-badge hb-blue">v 1.1.0</span>
+    <span class="hero-badge hb-green">GPL-2.0-or-later</span>
+    <span class="hero-badge hb-blue">QGIS ≥ 3.0</span>
+    <span class="hero-badge hb-amber">1,895 lines · 4 files</span>
+    <span class="hero-badge hb-green">No extra pip install</span>
+  </div>
+</section>
+
+<!-- PLUGIN SCREENSHOT MOCKUP -->
+<div class="screenshot-wrap">
+  <div class="screenshot-frame">
+    <div class="frame-titlebar">
+      <span class="frame-dot fd-r"></span>
+      <span class="frame-dot fd-y"></span>
+      <span class="frame-dot fd-g"></span>
+      <span class="frame-title">RasterViz — Scientific Raster Visualization &nbsp;|&nbsp; QGIS 3.x</span>
+    </div>
+    <div class="plugin-ui">
+      <!-- LEFT -->
+      <div class="ui-panel left">
+        <div class="ui-grp">
+          <div class="ui-grp-hd">1. Layer &amp; Band</div>
+          <div class="ui-grp-bd">
+            <div class="ui-btn pri">OPEN RASTER FILE</div>
+            <div class="ui-row"><span class="ui-lbl">Layer:</span><select class="ui-sel"><option>NDVI_S2_2024.tif</option></select></div>
+            <div class="ui-row" style="gap:14px"><label class="ui-check"><span class="ui-check-box" style="background:rgba(79,143,255,.4)"></span>Single Band</label><label class="ui-check"><span class="ui-check-box"></span>RGB</label></div>
+            <div class="ui-row"><span class="ui-lbl">Band:</span><input class="ui-inp ui-inp-sm" value="1"></div>
+            <div class="ui-btn pri" style="margin-top:4px">READ DATA &amp; RENDER</div>
+          </div>
+        </div>
+        <div class="ui-grp">
+          <div class="ui-grp-hd">2. Color Mode &amp; Stretch</div>
+          <div class="ui-grp-bd">
+            <div class="ui-row" style="gap:0;margin-bottom:6px">
+              <div style="flex:1;padding:4px 6px;background:rgba(79,143,255,.12);color:#7eb8ff;font-size:10px;border-radius:3px 0 0 3px;text-align:center;border:1px solid rgba(79,143,255,.25)">🎨 Continuous</div>
+              <div style="flex:1;padding:4px 6px;color:#5a7099;font-size:10px;border-radius:0 3px 3px 0;text-align:center;border:1px solid rgba(255,255,255,.06)">🗂 Discrete</div>
+            </div>
+            <div class="ui-row"><span class="ui-lbl">Stretch:</span><select class="ui-sel"><option>Percentile</option></select></div>
+            <div class="ui-row"><span class="ui-lbl">Pmin %:</span><input class="ui-inp ui-inp-sm" value="2"><span class="ui-lbl" style="min-width:36px;text-align:right">Pmax:</span><input class="ui-inp ui-inp-sm" value="98"></div>
+            <div style="height:18px;border-radius:3px;border:1px solid rgba(79,143,255,.2);background:linear-gradient(90deg,#ffffff,#CE7E45,#FCD163,#99B718,#3E8601,#004C00);margin:2px 0"></div>
+            <div style="font-size:9.5px;color:#5a7099;font-family:'DM Mono',monospace;text-align:center">NDVI_Custom</div>
+            <div class="ui-check"><span class="ui-check-box" style="background:rgba(79,143,255,.4)"></span>Reverse colormap</div>
+            <div class="ui-check"><span class="ui-check-box" style="background:rgba(79,143,255,.4)"></span>Transparent Nodata</div>
+          </div>
+        </div>
+        <div class="ui-grp">
+          <div class="ui-grp-hd">3. Export</div>
+          <div class="ui-grp-bd"><div class="ui-btn">EXPORT IMAGE</div></div>
+        </div>
+      </div>
+
+      <!-- CENTRE -->
+      <div class="ui-panel centre" style="padding:0">
+        <div class="canvas-area">
+          <div class="mpl-bar">
+            <span>⌂</span><span>✥</span><span>⊕</span><span>⊖</span><span>💾</span>
+            <span style="margin-left:auto">x=107.3421  y=−7.1234</span>
+          </div>
+          <div class="raster-preview">
+            <canvas id="hero-raster" width="560" height="290" style="width:100%;height:290px;display:block"></canvas>
+          </div>
+          <div class="cbar-strip">
+            <div class="cbar-inner" style="background:linear-gradient(90deg,#ffffff,#CE7E45,#F1B555,#FCD163,#99B718,#3E8601,#004C00)"></div>
+            <div class="cbar-ticks"><span>−1.00</span><span>−0.50</span><span>0.00</span><span>0.50</span><span>1.00</span></div>
+          </div>
+          <div class="status-bar">Data ready — live preview from cached NumPy array. &nbsp;RasterViz v1.1.0 active.</div>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="ui-panel right">
+        <div class="ui-grp">
+          <div class="ui-grp-hd">4. Display Control</div>
+          <div class="ui-grp-bd">
+            <div class="ui-row"><span class="ui-lbl">BG:</span><select class="ui-sel"><option>Soft Black</option></select></div>
+            <div class="ui-check"><span class="ui-check-box" style="background:rgba(79,143,255,.4)"></span>Show Colorbar / Legend</div>
+            <div class="ui-check"><span class="ui-check-box" style="background:rgba(79,143,255,.4)"></span>Show Coordinate Axes</div>
+            <div class="ui-check"><span class="ui-check-box" style="background:rgba(79,143,255,.4)"></span>Show Grid Lines</div>
+          </div>
+        </div>
+        <div class="ui-grp">
+          <div class="ui-grp-hd">5. Title &amp; Font</div>
+          <div class="ui-grp-bd">
+            <div class="ui-row"><span class="ui-lbl">Font:</span><select class="ui-sel"><option>DM Sans</option></select></div>
+            <div class="ui-row"><span class="ui-lbl">Title:</span><input class="ui-inp" value="NDVI — Sentinel-2 2024"></div>
+            <div class="ui-row"><span class="ui-lbl">Size:</span><input class="ui-inp ui-inp-sm" value="14"></div>
+          </div>
+        </div>
+        <div class="ui-grp">
+          <div class="ui-grp-hd">6. Map Geometry &amp; Coordinates</div>
+          <div class="ui-grp-bd">
+            <div class="ui-row"><span class="ui-lbl">Format:</span><select class="ui-sel"><option>D (Decimal Degree)</option></select></div>
+            <div class="ui-row"><span class="ui-lbl">Font sz:</span><input class="ui-inp ui-inp-sm" value="9"><span class="ui-lbl" style="min-width:36px">Dec:</span><input class="ui-inp ui-inp-sm" value="4"></div>
+            <div style="font-size:9.5px;color:#7eb8ff;font-weight:600;margin:4px 0 2px;font-family:'DM Mono',monospace">Label Rotation</div>
+            <div class="ui-row"><span class="ui-lbl">X-axis:</span><input class="ui-inp" type="range" min="0" max="360" value="45" style="flex:1"><span style="font-size:9px;color:#e2e8f0;min-width:24px;font-family:'DM Mono',monospace">45°</span></div>
+            <div class="ui-row"><span class="ui-lbl">Y-axis:</span><input class="ui-inp" type="range" min="0" max="360" value="0" style="flex:1"><span style="font-size:9px;color:#e2e8f0;min-width:24px;font-family:'DM Mono',monospace">0°</span></div>
+            <div class="ui-row"><span class="ui-lbl">X Ticks:</span><input class="ui-inp ui-inp-sm" value="5"><span class="ui-lbl" style="min-width:38px">Y:</span><input class="ui-inp ui-inp-sm" value="5"></div>
+          </div>
+        </div>
+        <div class="ui-grp">
+          <div class="ui-grp-hd">7. Colorbar Layout</div>
+          <div class="ui-grp-bd">
+            <div class="ui-row"><span class="ui-lbl">Orient:</span><select class="ui-sel"><option>horizontal</option></select></div>
+            <div class="ui-row"><span class="ui-lbl">End:</span><select class="ui-sel"><option>Both Pointed</option></select></div>
+            <div class="ui-row"><span class="ui-lbl">Label:</span><input class="ui-inp" value="NDVI"></div>
+            <div class="ui-row"><span class="ui-lbl">Ticks:</span><input class="ui-inp ui-inp-sm" value="5"><span class="ui-lbl" style="min-width:28px">Dec:</span><input class="ui-inp ui-inp-sm" value="2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<main>
+
+<!-- OVERVIEW -->
+<section class="section" id="overview">
+  <div class="section-label">Overview</div>
+  <div class="section-title">Replace your rasterio scripts<br>with zero lines of code</div>
+  <p class="section-sub">
+    QGIS native symbology is sufficient for quick inspection, but publication-ready
+    figures still require Python. RasterViz closes that gap.
+  </p>
+
+  <div class="overview-grid reveal">
+    <div>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang">python</span>
+          <span class="code-label cl-before">without RasterViz</span>
+        </div>
+        <div class="code-body">
+<span class="tok-kw">import</span> rasterio, matplotlib.pyplot <span class="tok-kw">as</span> plt<br>
+<span class="tok-kw">from</span> rasterio.plot <span class="tok-kw">import</span> show<br>
+<span class="tok-kw">import</span> numpy <span class="tok-kw">as</span> np<br><br>
+src = rasterio.<span class="tok-fn">open</span>(<span class="tok-str">"ndvi.tif"</span>)<br>
+arr = src.<span class="tok-fn">read</span>(<span class="tok-num">1</span>).astype(<span class="tok-str">'float32'</span>)<br>
+arr[arr == src.nodata] = np.nan<br><br>
+vmin = np.<span class="tok-fn">nanpercentile</span>(arr, <span class="tok-num">2</span>)<br>
+vmax = np.<span class="tok-fn">nanpercentile</span>(arr, <span class="tok-num">98</span>)<br><br>
+fig, ax = plt.<span class="tok-fn">subplots</span>(figsize=(<span class="tok-num">10</span>,<span class="tok-num">8</span>))<br>
+im = ax.<span class="tok-fn">imshow</span>(arr, cmap=<span class="tok-str">"RdYlGn"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vmin=vmin, vmax=vmax)<br>
+cb = fig.<span class="tok-fn">colorbar</span>(im, ax=ax,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;extend=<span class="tok-str">"both"</span>)<br>
+cb.<span class="tok-fn">set_label</span>(<span class="tok-str">"NDVI"</span>)<br>
+ax.<span class="tok-fn">set_title</span>(<span class="tok-str">"NDVI Map"</span>)<br>
+plt.<span class="tok-fn">savefig</span>(<span class="tok-str">"ndvi.png"</span>, dpi=<span class="tok-num">300</span>)
+        </div>
+      </div>
+      <div class="code-block" style="margin-top:14px">
+        <div class="code-header">
+          <span class="code-lang">python</span>
+          <span class="code-label cl-after">with RasterViz</span>
+        </div>
+        <div class="code-body" style="color:#546e7a;font-style:italic">
+          <span class="tok-cm"># No code needed.<br>
+          # Open the plugin from the Raster menu,<br>
+          # select your layer, click READ DATA &amp; RENDER.<br>
+          # Adjust stretch, colormap, colorbar,<br>
+          # and export — all via the GUI.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="overview-prose">
+      <div class="prose-card">
+        <h4>Matplotlib renderer embedded in QGIS</h4>
+        <p>Every figure uses the <code>Qt5Agg</code> Matplotlib backend embedded directly in the QGIS dialog — so output is pixel-identical to what you'd get from a Jupyter notebook.</p>
+      </div>
+      <div class="prose-card">
+        <h4>Live preview from cached NumPy array</h4>
+        <p>Band data is read once via <code>QgsRasterDataProvider.block()</code> and cached as a <code>float64</code> array. Every subsequent parameter change — stretch, colormap, rotation — rerenders from cache. No disk I/O on adjustment.</p>
+      </div>
+      <div class="prose-card">
+        <h4>No external dependencies</h4>
+        <p>Built entirely on <code>PyQGIS + PyQt5 + NumPy + Matplotlib</code> — all bundled with the standard QGIS installation on Windows (OSGeo4W), Linux, and macOS. Zero pip commands required.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+  <div class="section-label">Features</div>
+  <div class="section-title">Every control a researcher needs</div>
+  <p class="section-sub">1,895 lines across 4 Python files. No bloat — every control maps directly to a Matplotlib parameter.</p>
+
+  <div class="features-grid reveal">
+    <div class="feat-card">
+      <div class="feat-icon fi-blue">🎨</div>
+      <h3>Stretch Control</h3>
+      <p>Actual min–max, percentile (configurable Pmin/Pmax), or manual vmin/vmax. Stretch boundaries annotated on a separate histogram panel.</p>
+      <div class="feat-tags">
+        <span class="feat-tag">Actual Min-Max</span>
+        <span class="feat-tag">Percentile</span>
+        <span class="feat-tag">Manual</span>
+      </div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon fi-green">🗺</div>
+      <h3>Coordinate Labels</h3>
+      <p>DMS, DM, Decimal Degree, and UTM/Metre formats. Independent X/Y tick count, font size, decimal places, and rotation (0–360°).</p>
+      <div class="feat-tags">
+        <span class="feat-tag">DMS</span>
+        <span class="feat-tag">DM</span>
+        <span class="feat-tag">Decimal Degree</span>
+        <span class="feat-tag">UTM</span>
+      </div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon fi-amber">📊</div>
+      <h3>Pointed Colorbar</h3>
+      <p>Horizontal or vertical; both/max/min/neither extension arrows. Position, length, thickness, tick count, tick decimals, and padding — all configurable.</p>
+      <div class="feat-tags">
+        <span class="feat-tag">Both Pointed</span>
+        <span class="feat-tag">Right Pointed</span>
+        <span class="feat-tag">Box</span>
+      </div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon fi-purple">🗂</div>
+      <h3>Discrete / Classified</h3>
+      <p>Auto-scan gridcodes. Per-class colour via swatch or hex input. Editable labels and decimal places per class. Patch legend replaces colorbar.</p>
+      <div class="feat-tags">
+        <span class="feat-tag">Auto scan</span>
+        <span class="feat-tag">Per-class colour</span>
+        <span class="feat-tag">Patch legend</span>
+      </div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon fi-blue">📐</div>
+      <h3>Layout Series</h3>
+      <p>N×M multi-map grid. Each sub-map has independent layer, band, colormap, stretch, title, and colorbar toggle. Assembled via <code>GridSpec</code>.</p>
+      <div class="feat-tags">
+        <span class="feat-tag">2×2</span>
+        <span class="feat-tag">3×2</span>
+        <span class="feat-tag">Custom N×M</span>
+      </div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon fi-green">📤</div>
+      <h3>High-resolution Export</h3>
+      <p>PNG and TIFF at 300 DPI; SVG and PDF at 150 DPI. Transparent background supported when a transparent theme is selected.</p>
+      <div class="feat-tags">
+        <span class="feat-tag">PNG 300 DPI</span>
+        <span class="feat-tag">SVG</span>
+        <span class="feat-tag">TIFF</span>
+        <span class="feat-tag">PDF</span>
+      </div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon fi-amber">🌈</div>
+      <h3>RGB Composite</h3>
+      <p>Three-band composite with independent per-channel stretch. Suitable for Sentinel-2 true-colour (B4/B3/B2) or false-colour composites.</p>
+      <div class="feat-tags">
+        <span class="feat-tag">True Colour</span>
+        <span class="feat-tag">False Colour</span>
+        <span class="feat-tag">Per-band stretch</span>
+      </div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon fi-purple">⚡</div>
+      <h3>Live Preview</h3>
+      <p>NumPy array cached on first read. All downstream parameter signals trigger a <code>fig.clf()</code> + redraw. No disk access on adjustment.</p>
+      <div class="feat-tags">
+        <span class="feat-tag">No re-read</span>
+        <span class="feat-tag">Qt signal chain</span>
+        <span class="feat-tag">Instant</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- COLORMAPS -->
+<section class="section" id="colormaps">
+  <div class="section-label">Colormaps</div>
+  <div class="section-title">24 domain-specific palettes<br>+ full Matplotlib library</div>
+  <p class="section-sub">All palettes registered via <code>plt.colormaps</code> at plugin startup. Available in normal and reversed form.</p>
+
+  <div class="cmap-section reveal">
+    <div style="font-size:13px;color:var(--text2);margin-bottom:4px">
+      Custom palettes cover vegetation indices, SAR backscatter, mangrove mapping, carbon stock, bathymetry, and more.
+      The full Matplotlib library (~60 additional named colormaps) is also accessible via the same ◀ ▶ cycler.
+    </div>
+    <div class="cmap-grid" id="cmap-grid"></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- DEPENDENCIES -->
+<section class="section">
+  <div class="section-label">Dependencies</div>
+  <div class="section-title">Zero additional installation</div>
+  <p class="section-sub">Every package ships with the standard QGIS installation on Windows, Linux, and macOS. No pip commands required.</p>
+
+  <div class="dep-grid reveal">
+    <div class="dep-card">
+      <div class="dep-icon">🧱</div>
+      <div class="dep-body">
+        <h4>PyQGIS</h4>
+        <p><code>qgis.core</code>, <code>qgis.PyQt</code> — layer access, raster data provider, QGIS GUI integration</p>
+        <span class="dep-badge">✓ bundled with QGIS</span>
+      </div>
+    </div>
+    <div class="dep-card">
+      <div class="dep-icon">🪟</div>
+      <div class="dep-body">
+        <h4>PyQt5</h4>
+        <p><code>QtWidgets</code>, <code>QtGui</code>, <code>QtCore</code> — all dialog, widget, and layout construction</p>
+        <span class="dep-badge">✓ bundled with QGIS</span>
+      </div>
+    </div>
+    <div class="dep-card">
+      <div class="dep-icon">🔢</div>
+      <div class="dep-body">
+        <h4>NumPy</h4>
+        <p>Raster array operations, stretch computation, RGBA image assembly, percentile calculation</p>
+        <span class="dep-badge">✓ bundled with QGIS</span>
+      </div>
+    </div>
+    <div class="dep-card">
+      <div class="dep-icon">📈</div>
+      <div class="dep-body">
+        <h4>Matplotlib</h4>
+        <p><code>pyplot</code>, <code>colors</code>, <code>ticker</code>, <code>patches</code>, <code>gridspec</code>, <code>backend_qt5agg</code></p>
+        <span class="dep-badge">✓ bundled with QGIS</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- INSTALLATION -->
+<section class="section" id="install">
+  <div class="section-label">Installation</div>
+  <div class="section-title">Three ways to install</div>
+  <p class="section-sub">QGIS ≥ 3.0 required. Python ≥ 3.6 (included with QGIS).</p>
+
+  <div class="install-steps reveal">
+    <div class="install-step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h3>Plugin Manager <span style="font-size:12px;font-family:var(--mono);color:var(--green);font-weight:400;margin-left:8px">Recommended — pending approval</span></h3>
+        <p>Once approved in the QGIS plugin repository, search for <code>RasterViz</code> in the Plugin Manager's <em>All</em> tab and click <strong>Install Plugin</strong>. Access via <code>Raster → QRVIZ → QRVIZ — Scientific Raster Visualization</code>.</p>
+        <div class="step-tags">
+          <span class="step-tag">Plugins → Manage and Install Plugins</span>
+          <span class="step-tag">Search: RasterViz</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="install-step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h3>Install from ZIP</h3>
+        <p>Download the latest release ZIP from the <a href="https://github.com/Defani/QRasterVIZ/releases" style="color:var(--accent2)">Releases page</a>, then use <code>Plugins → Manage and Install Plugins → Install from ZIP</code>.</p>
+        <div class="step-tags">
+          <span class="step-tag">github.com/Defani/QRasterVIZ/releases</span>
+          <span class="step-tag">Install from ZIP</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="install-step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h3>Install from Source</h3>
+        <div class="code-snippet">
+<span class="cm"># Clone the repository</span><br>
+<span class="kw">git</span> clone https://github.com/Defani/QRasterVIZ.git<br><br>
+<span class="cm"># Windows (OSGeo4W)</span><br>
+<span class="kw">cp</span> -r QRasterVIZ/qrviz <span class="path">%APPDATA%\QGIS\QGIS3\profiles\default\python\plugins\qrviz</span><br><br>
+<span class="cm"># Linux</span><br>
+<span class="kw">cp</span> -r QRasterVIZ/qrviz <span class="path">~/.local/share/QGIS/QGIS3/profiles/default/python/plugins/qrviz</span><br><br>
+<span class="cm"># macOS</span><br>
+<span class="kw">cp</span> -r QRasterVIZ/qrviz <span class="path">~/Library/Application Support/QGIS/QGIS3/profiles/default/python/plugins/qrviz</span>
+        </div>
+        <p style="margin-top:10px;font-size:13px;color:var(--text2)">Then in QGIS: <code>Plugins → Manage and Install Plugins → Installed</code> — tick <strong>QRVIZ</strong> to activate.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- QUICK START -->
+<section class="section" id="quickstart">
+  <div class="section-label">Quick Start</div>
+  <div class="section-title">Six steps to a publication figure</div>
+  <p class="section-sub">From raw GeoTIFF to export-ready PNG at 300 DPI. No scripting required.</p>
+
+  <div class="tutorial-steps reveal">
+    <div class="tutorial-card">
+      <div class="tut-num">1</div>
+      <div class="tut-step-label">Step 01</div>
+      <h3>Open a Raster Layer</h3>
+      <p>Load a single-band GeoTIFF (e.g. NDVI from Sentinel-2) into QGIS. Launch RasterViz from <code>Raster → QRVIZ</code>. Select the layer from the dropdown, set Band: 1, and click <strong>READ DATA &amp; RENDER</strong>.</p>
+    </div>
+
+    <div class="tutorial-card">
+      <div class="tut-num">2</div>
+      <div class="tut-step-label">Step 02</div>
+      <h3>Configure Stretch</h3>
+      <p>In Group 2 → Continuous tab, choose a stretch mode. Percentile is recommended for most remote sensing data.</p>
+      <div class="tut-params">
+        <div class="tut-param"><span class="tut-param-key">Mode</span><span class="tut-param-val">Percentile</span></div>
+        <div class="tut-param"><span class="tut-param-key">Pmin</span><span class="tut-param-val">2</span></div>
+        <div class="tut-param"><span class="tut-param-key">Pmax</span><span class="tut-param-val">98</span></div>
+      </div>
+    </div>
+
+    <div class="tutorial-card">
+      <div class="tut-num">3</div>
+      <div class="tut-step-label">Step 03</div>
+      <h3>Choose a Colormap</h3>
+      <p>Use the ◀ ▶ arrows to cycle through palettes. A colour ramp preview is shown inline. Enable <strong>Reverse</strong> to invert any palette.</p>
+      <div class="tut-params">
+        <div class="tut-param"><span class="tut-param-key">Vegetation</span><span class="tut-param-val">NDVI_Custom</span></div>
+        <div class="tut-param"><span class="tut-param-key">Mangrove</span><span class="tut-param-val">Mangrove</span></div>
+        <div class="tut-param"><span class="tut-param-key">SAR</span><span class="tut-param-val">SAR_Backscatter</span></div>
+      </div>
+    </div>
+
+    <div class="tutorial-card">
+      <div class="tut-num">4</div>
+      <div class="tut-step-label">Step 04</div>
+      <h3>Tune Coordinate Labels</h3>
+      <p>In Group 6, set coordinate format, decimal places, tick count, and rotation for X and Y axes independently.</p>
+      <div class="tut-params">
+        <div class="tut-param"><span class="tut-param-key">Format</span><span class="tut-param-val">Decimal Degree</span></div>
+        <div class="tut-param"><span class="tut-param-key">X rotation</span><span class="tut-param-val">45°</span></div>
+        <div class="tut-param"><span class="tut-param-key">Y rotation</span><span class="tut-param-val">0°</span></div>
+        <div class="tut-param"><span class="tut-param-key">Decimals</span><span class="tut-param-val">4</span></div>
+      </div>
+    </div>
+
+    <div class="tutorial-card">
+      <div class="tut-num">5</div>
+      <div class="tut-step-label">Step 05</div>
+      <h3>Style the Colorbar</h3>
+      <p>In Group 7, choose orientation, end style, label, and tick settings. <strong>Both Pointed</strong> replicates the rasterio aesthetic.</p>
+      <div class="tut-params">
+        <div class="tut-param"><span class="tut-param-key">Orientation</span><span class="tut-param-val">horizontal</span></div>
+        <div class="tut-param"><span class="tut-param-key">End style</span><span class="tut-param-val">Both Pointed</span></div>
+        <div class="tut-param"><span class="tut-param-key">Tick Count</span><span class="tut-param-val">5</span></div>
+        <div class="tut-param"><span class="tut-param-key">Tick Dec</span><span class="tut-param-val">2</span></div>
+      </div>
+    </div>
+
+    <div class="tutorial-card">
+      <div class="tut-num">6</div>
+      <div class="tut-step-label">Step 06</div>
+      <h3>Export</h3>
+      <p>Click <strong>EXPORT IMAGE</strong> in Group 3. Choose PNG for journal submission at 300 DPI, PDF/SVG for posters and slides.</p>
+      <div class="export-grid" style="grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px">
+        <div class="export-card" style="padding:10px 8px">
+          <div class="export-fmt" style="font-size:14px">PNG</div>
+          <div class="export-dpi">300 DPI</div>
+        </div>
+        <div class="export-card" style="padding:10px 8px">
+          <div class="export-fmt" style="font-size:14px">PDF</div>
+          <div class="export-dpi">150 DPI</div>
+        </div>
+        <div class="export-card" style="padding:10px 8px">
+          <div class="export-fmt" style="font-size:14px">SVG</div>
+          <div class="export-dpi">vector</div>
+        </div>
+        <div class="export-card" style="padding:10px 8px">
+          <div class="export-fmt" style="font-size:14px">TIFF</div>
+          <div class="export-dpi">300 DPI</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CODEBASE -->
+<section class="section" id="codebase">
+  <div class="section-label">Codebase</div>
+  <div class="section-title">1,895 lines · 4 Python files</div>
+  <p class="section-sub">Clean single-module architecture. No generated UI files, no binary blobs, no compiled resources.</p>
+
+  <div class="tree-block reveal">
+    <div class="tree-header">
+      <span>📁</span>
+      <span>qrviz/</span>
+      <span style="margin-left:auto;font-size:10px">github.com/Defani/QRasterVIZ</span>
+    </div>
+    <div class="tree-body">
+<span class="t-dir">qrviz/</span><br>
+├── <span class="t-py">__init__.py</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-cm"># classFactory — QGIS plugin entry point</span> <span class="t-num">8 lines</span><br>
+├── <span class="t-py">qrviz.py</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-cm"># QRVIZPlugin — initGui, unload, run</span> <span class="t-num">42 lines</span><br>
+├── <span class="t-py">dialog.py</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-cm"># Main dialog</span> <span class="t-num">1,693 lines</span><br>
+│&nbsp;&nbsp;&nbsp;├── <span class="t-accent">DiscreteClassRow</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-cm"># Per-class colour/label/decimal widget</span><br>
+│&nbsp;&nbsp;&nbsp;├── <span class="t-accent">LayoutSlotWidget</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-cm"># Per-slot config for layout series</span><br>
+│&nbsp;&nbsp;&nbsp;└── <span class="t-accent">QRVIZDialog</span><br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── _build_single_map_tab()<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── _build_layout_series_tab()<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── _render_continuous()<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── _render_discrete()<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── _render_rgb()<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── _render_layout() &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-cm"># GridSpec multi-map</span><br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── _style_axes() &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-cm"># Rotation, tick count, formatters</span><br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── _make_lon_formatter() &nbsp;&nbsp;<span class="t-cm"># DMS/DM/DD/UTM closures</span><br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── export_figure() / _export_layout()<br>
+├── <span class="t-py">colormaps.py</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-cm"># Custom palette registry</span> <span class="t-num">152 lines</span><br>
+│&nbsp;&nbsp;&nbsp;├── CUSTOM_PALETTES &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-cm"># 24 domain-specific colormaps</span><br>
+│&nbsp;&nbsp;&nbsp;└── COLORMAPS &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-cm"># Master list ~60 entries</span><br>
+├── <span class="t-accent">metadata.txt</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-cm"># QGIS plugin metadata</span><br>
+├── <span class="t-accent">icon.png</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-cm"># Toolbar icon</span><br>
+└── <span class="t-accent">LICENSE</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-cm"># GNU GPL v2 or later</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CITATION -->
+<section class="section">
+  <div class="section-label">Citation</div>
+  <div class="section-title">Cite in your research</div>
+  <p class="section-sub" style="margin-bottom:24px">If RasterViz contributes to published research, please cite the software as:</p>
+  <div class="citation-block reveal">
+    Alfitriansyah, D. A. (2026). <em>RasterViz: Scientific Raster Visualization Plugin for QGIS</em><br>
+    (Version 1.1.0) [Software]. <a href="https://github.com/Defani/QRasterVIZ" style="color:var(--accent2)">https://github.com/Defani/QRasterVIZ</a>
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">
+    <div class="footer-logo">RV</div>
+    <span class="footer-name">RasterViz</span>
+    <span style="font-size:12px;color:var(--text3);margin-left:4px">v1.1.0</span>
+  </div>
+  <div class="footer-links">
+    <a href="https://github.com/Defani/QRasterVIZ" target="_blank">GitHub</a>
+    <a href="https://github.com/Defani/QRasterVIZ/releases" target="_blank">Releases</a>
+    <a href="https://github.com/Defani/QRasterVIZ/issues" target="_blank">Issues</a>
+    <a href="#install">Install</a>
+    <a href="#quickstart">Tutorial</a>
+  </div>
+  <div class="footer-right">Built with PyQGIS · NumPy · Matplotlib · PyQt5</div>
+</footer>
+
+<script>
+/* ── Raster canvas render ── */
+function lerp(a,b,t){return a+(b-a)*t}
+function hexToRgb(h){return[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)]}
+function interpColor(stops,t){
+  const seg=(stops.length-1)*t;
+  const i=Math.floor(Math.min(seg,stops.length-2));
+  const f=seg-i;
+  const a=hexToRgb(stops[i]),b=hexToRgb(stops[i+1]);
+  return[Math.round(lerp(a[0],b[0],f)),Math.round(lerp(a[1],b[1],f)),Math.round(lerp(a[2],b[2],f))];
+}
+
+const NDVI_STOPS=['#FFFFFF','#CE7E45','#DF923D','#F1B555','#FCD163','#99B718','#74A901','#66A000','#3E8601','#207401','#004C00'];
+
+function drawHeroRaster(){
+  const cv=document.getElementById('hero-raster');
+  if(!cv)return;
+  const ctx=cv.getContext('2d');
+  const W=cv.width,H=cv.height;
+  const img=ctx.createImageData(W,H);
+  for(let y=0;y<H;y++){
+    for(let x=0;x<W;x++){
+      const nx=x/W,ny=y/H;
+      const v=
+        0.35*Math.sin(nx*9+0.8)+
+        0.25*Math.cos(ny*7+0.4)+
+        0.2*Math.sin((nx+ny)*5+1.2)+
+        0.1*Math.sin(nx*18+ny*14)+
+        0.55;
+      const t=Math.max(0,Math.min(1,v));
+      const [r,g,b]=interpColor(NDVI_STOPS,t);
+      const idx=(y*W+x)*4;
+      img.data[idx]=r;img.data[idx+1]=g;img.data[idx+2]=b;img.data[idx+3]=255;
+    }
+  }
+  ctx.putImageData(img,0,0);
+
+  /* coordinate grid overlay */
+  ctx.strokeStyle='rgba(255,255,255,0.15)';
+  ctx.lineWidth=0.8;
+  ctx.setLineDash([4,4]);
+  for(let i=1;i<5;i++){
+    ctx.beginPath();ctx.moveTo(i*W/5,0);ctx.lineTo(i*W/5,H);ctx.stroke();
+  }
+  for(let j=1;j<4;j++){
+    ctx.beginPath();ctx.moveTo(0,j*H/4);ctx.lineTo(W,j*H/4);ctx.stroke();
+  }
+
+  /* y-axis labels */
+  ctx.fillStyle='rgba(140,163,200,0.9)';
+  ctx.font='9px DM Mono,monospace';
+  ctx.textAlign='right';
+  const yLabels=['-6.80°S','-6.95°S','-7.10°S','-7.25°S'];
+  yLabels.forEach((l,i)=>{ctx.fillText(l,W-4,(i+1)*H/4-4);});
+
+  /* x-axis labels */
+  ctx.textAlign='center';
+  const xLabels=['107.18°E','107.26°E','107.34°E','107.42°E'];
+  xLabels.forEach((l,i)=>{ctx.fillText(l,(i+1)*W/5,H-5);});
+}
+
+/* ── Colormap grid ── */
+const CMAPS=[
+  {name:'NDVI_Custom',domain:'NDVI / vegetation',stops:['#FFFFFF','#CE7E45','#F1B555','#FCD163','#99B718','#3E8601','#004C00']},
+  {name:'RdYlGn_Custom',domain:'Diverging vegetation',stops:['#d73027','#f46d43','#fdae61','#fee08b','#d9ef8b','#66bd63','#1a9850']},
+  {name:'Custom_BlkRdYlGn',domain:'High-contrast NDVI',stops:['#000000','#a50026','#fdae61','#ffffbf','#66bd63','#1a9850','#006837']},
+  {name:'Mangrove',domain:'Mangrove canopy',stops:['#f5f5dc','#c8e6c9','#a5d6a7','#66bb6a','#388e3c','#1b5e20','#051a0d']},
+  {name:'Carbon_Stock',domain:'Biomass / carbon',stops:['#fff9c4','#fff176','#f9a825','#e65100','#bf360c','#4e342e']},
+  {name:'SAR_Backscatter',domain:'SAR intensity',stops:['#000000','#1a1a2e','#0f3460','#533483','#e94560','#ffffff']},
+  {name:'Water',domain:'Water depth / turbidity',stops:['#00008b','#0000ff','#00bfff','#add8e6','#ffffff']},
+  {name:'Ocean_Deep',domain:'Bathymetry',stops:['#00204d','#1a6ba8','#3aaad0','#55c5d8','#d5f5f5']},
+  {name:'Urban',domain:'LULC / built-up',stops:['#1a9850','#a6d96a','#fee08b','#fdae61','#f46d43','#d73027']},
+  {name:'Agriculture',domain:'Cropland',stops:['#3f260b','#835216','#c7a52f','#e3e94b','#7fc41d','#134504']},
+  {name:'Terrain_Custom',domain:'Elevation / DEM',stops:['#006600','#33cc33','#ffff00','#ff9900','#993300','#ffffff']},
+  {name:'Viridis_Custom',domain:'Perceptually uniform',stops:['#440154','#414487','#2a788e','#22a884','#7ad151','#fde725']},
+  {name:'Magma_Custom',domain:'Perceptually uniform',stops:['#000004','#3b0f70','#8c2981','#de4968','#fe9f6d','#fcfdbf']},
+  {name:'Inferno_Custom',domain:'High contrast',stops:['#000004','#57157e','#cb4679','#eb7852','#fdb32f','#f0f921']},
+  {name:'Plasma_Custom',domain:'Purple → yellow',stops:['#0d0887','#7201a8','#bd3786','#ed7953','#fdca26','#f0f921']},
+  {name:'Cividis_Custom',domain:'CVD-safe',stops:['#00204d','#164870','#50737b','#8ea28c','#d3d4a6','#f6edb3']},
+  {name:'Spectral_Custom',domain:'General spectral',stops:['#d53e4f','#fdae61','#ffffbf','#abdda4','#3288bd']},
+  {name:'Blues_Custom',domain:'Rainfall / moisture',stops:['#f7fbff','#c6dbef','#6baed6','#2171b5','#084594']},
+  {name:'RdBu_Custom',domain:'Diverging anomaly',stops:['#b2182b','#ef8a62','#fddbc7','#d1e5f0','#67a9cf','#2166ac']},
+  {name:'Brown2Green',domain:'Soil → vegetation',stops:['#8c510a','#bf812d','#f6e8c3','#c7eae5','#35978f','#01665e']},
+  {name:'Red2Green',domain:'Stress → health',stops:['#a50026','#f46d43','#fee08b','#d9ef8b','#66bd63','#006837']},
+  {name:'Greys_Custom',domain:'Panchromatic / SAR',stops:['#ffffff','#d9d9d9','#969696','#525252','#252525']},
+  {name:'YlGn_Custom',domain:'Canopy / LAI',stops:['#ffffe5','#d9f0a3','#78c679','#238443','#005a32']},
+  {name:'Rainbow_Custom',domain:'Multi-class thematic',stops:['#ff0000','#ff7f00','#ffff00','#00ff00','#0000ff','#8b00ff']},
+];
+
+function buildCmapCanvas(stops,w,h){
+  const cv=document.createElement('canvas');cv.width=w;cv.height=h;
+  const ctx=cv.getContext('2d');
+  for(let x=0;x<w;x++){
+    const [r,g,b]=interpColor(stops,x/(w-1));
+    ctx.fillStyle=`rgb(${r},${g},${b})`;
+    ctx.fillRect(x,0,1,h);
+  }
+  return cv;
+}
+
+function buildCmapGrid(){
+  const grid=document.getElementById('cmap-grid');
+  if(!grid)return;
+  CMAPS.forEach(cm=>{
+    const card=document.createElement('div');
+    card.className='cmap-card';
+    const cv=buildCmapCanvas(cm.stops,200,28);
+    cv.className='cmap-ramp';
+    const info=document.createElement('div');
+    info.className='cmap-info';
+    info.innerHTML=`<div class="cmap-name">${cm.name}</div><div class="cmap-domain">${cm.domain}</div>`;
+    card.appendChild(cv);card.appendChild(info);
+    grid.appendChild(card);
+  });
+}
+
+/* ── Intersection observer for reveal ── */
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');}});
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+/* init */
+window.addEventListener('load',()=>{
+  drawHeroRaster();
+  buildCmapGrid();
+});
+</script>
+</body>
+</html>
