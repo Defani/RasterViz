@@ -157,39 +157,11 @@ Generates a single figure with N×M sub-maps:
 
 ---
 
-## Colormap Library
+## Colour Palettes
 
-### Custom Domain-Specific Palettes
+All palettes below are registered automatically at plugin load time via `LinearSegmentedColormap.from_list()`. All standard Matplotlib colormaps (`viridis`, `plasma`, `RdYlGn`, `jet`, etc.) are also available.
 
-| Palette | Domain |
-|---|---|
-| `NDVI_Custom` | NDVI / vegetation — white → brown → yellow → dark green |
-| `RdYlGn_Custom` | Diverging vegetation health |
-| `Custom_BlkRdYlGn` | High-contrast NDVI for dark backgrounds |
-| `YlGn_Custom` | Canopy cover, leaf area index |
-| `Red2Green` | Stress-to-health gradient |
-| `Brown2Green` | Soil-to-vegetation transition |
-| `Mangrove` | Mangrove canopy density |
-| `Carbon_Stock` | Biomass / carbon — yellow → dark brown |
-| `SAR_Backscatter` | SAR intensity — dark → bright |
-| `Water` | Water depth / turbidity |
-| `Ocean_Deep` | Bathymetry |
-| `Urban` | LULC — vegetation → built-up |
-| `Agriculture` | Cropland |
-| `Terrain_Custom` | Elevation / DEM |
-| `RdBu_Custom` | Diverging anomaly maps |
-| `Spectral_Custom` | General spectral |
-| `Blues_Custom` | Rainfall / moisture |
-| `Viridis_Custom` | Perceptually uniform |
-| `Magma_Custom` | Perceptually uniform (dark → bright) |
-| `Inferno_Custom` | Perceptually uniform (high contrast) |
-| `Plasma_Custom` | Perceptually uniform (purple → yellow) |
-| `Cividis_Custom` | CVD-safe |
-| `Greys_Custom` | Panchromatic / grayscale |
-| `Rainbow_Custom` | Multi-class thematic (use sparingly) |
-
-All palettes available in reversed form via **Reverse** toggle.
-
+<img width="1621" height="1866" alt="colormaps_preview" src="https://github.com/user-attachments/assets/8a9de347-7afd-405a-aac9-0b08fe2a0f0b" />
 ---
 
 ## Dependencies
