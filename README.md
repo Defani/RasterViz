@@ -69,6 +69,10 @@ plt.savefig("ndvi.png", dpi=300)
 - Inline ramp preview, **Reverse** toggle
 - All palettes registered via `plt.colormaps` — available anywhere in QGIS
 
+
+https://github.com/user-attachments/assets/fdb1e943-984a-4fb1-9cbb-ae0d25aff278
+
+
 ### Colorbar
 
 - Orientation: horizontal or vertical
