@@ -70,7 +70,10 @@ plt.savefig("ndvi.png", dpi=300)
 - All palettes registered via `plt.colormaps` — available anywhere in QGIS
 
 
-https://github.com/user-attachments/assets/fdb1e943-984a-4fb1-9cbb-ae0d25aff278
+
+
+https://github.com/user-attachments/assets/b2b6a02a-940a-42a9-8f3d-ee696b542c3e
+
 
 
 ### Colorbar
@@ -81,6 +84,10 @@ https://github.com/user-attachments/assets/fdb1e943-984a-4fb1-9cbb-ae0d25aff278
 - Independent **Bold** toggles for label and tick labels
 - Configurable position, length, thickness, label text, label/tick sizes, tick count, tick decimal places, padding
 - Orientation-aware geometry: *Length* = long axis, *Thickness* = short axis (corrected from earlier versions)
+
+
+<img width="1122" height="793" alt="download (1) (1)" src="https://github.com/user-attachments/assets/a11c123b-88f1-4805-b234-b950aa22e183" />
+
 
 ### Discrete Legend
 
