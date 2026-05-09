@@ -71,8 +71,8 @@ plt.savefig("ndvi.png", dpi=300)
 
 
 
+<img width="1280" height="720" alt="ScreenRecording2026-05-09224113-ezgif com-video-to-gif-converter" src="https://github.com/user-attachments/assets/3c154615-2c2c-426e-94d9-8bfe63cf6d1f" />
 
-https://github.com/user-attachments/assets/b2b6a02a-940a-42a9-8f3d-ee696b542c3e
 
 
 
@@ -120,7 +120,8 @@ https://github.com/user-attachments/assets/b2b6a02a-940a-42a9-8f3d-ee696b542c3e
 Activate **✋ Drag Elements** in the top toolbar. Then drag:
 
 
-https://github.com/user-attachments/assets/d259ed41-7c18-4e7d-b863-58c4445e9f7a
+<img width="1280" height="720" alt="ScreenRecording2026-05-09232459-ezgif com-video-to-gif-converter" src="https://github.com/user-attachments/assets/368be8bf-e836-492e-825d-23a4e0a88871" />
+
 
 
 - Continuous colorbar
