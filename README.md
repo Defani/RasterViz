@@ -403,17 +403,7 @@ QRasterVIZ-main/
 - Rougier, N. P., Droettboom, M., & Bourne, P. E. (2014). Ten simple rules for better figures. *PLOS Computational Biology*, **10**(9), e1003833. https://doi.org/10.1371/journal.pcbi.1003833
 - Crameri, F. (2024). Choosing suitable color palettes for accessible and accurate science figures. *Current Protocols*. https://doi.org/10.1002/cpz1.1126
 
----
 
-## Contributing
-
-Issues and pull requests welcome at the [issue tracker](https://github.com/Defani/QRasterVIZ/issues).
-
-- Write code comments in English
-- Follow PEP 8
-- Do not commit `*.pyc`, `__pycache__`, `desktop.ini`, `__MACOSX`
-- Test on Windows (OSGeo4W) and Linux before opening a PR
-- Plugin folder name must not repeat the word "plugin" (QGIS repository requirement)
 
 ---
 
