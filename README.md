@@ -8,11 +8,11 @@
 
 *Publication-quality raster figures — styled after `rasterio.show()` — without leaving QGIS.*
 
-[![Version](https://img.shields.io/badge/version-1.1.0-3b82f6?style=flat-square)](https://github.com/Defani/QRasterVIZ/releases)
+[![Version](https://img.shields.io/badge/version-1.1.0-3b82f6?style=flat-square)](https://plugins.qgis.org/plugins/qrviz/)
 [![QGIS](https://img.shields.io/badge/QGIS-3.x-589632?style=flat-square&logo=qgis&logoColor=white)](https://qgis.org)
 [![License](https://img.shields.io/badge/license-GPL--2.0--or--later-22c55e?style=flat-square)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.6%2B-3b82f6?style=flat-square&logo=python&logoColor=white)](https://python.org)
-[![Status](https://img.shields.io/badge/QGIS%20review-under%20review-f59e0b?style=flat-square)](https://plugins.qgis.org)
+[![Status](https://img.shields.io/badge/QGIS%20Plugin-published-22c55e?style=flat-square)](https://plugins.qgis.org/plugins/qrviz/)
 
 [Installation](#installation) · [Quick Start](#quick-start) · [Features](#features) · [Colormaps](#colormap-library) · [Tutorial](#step-by-step-tutorial) · [Codebase](#codebase)
 
@@ -71,7 +71,6 @@ plt.savefig("ndvi.png", dpi=300)
 
 
 
-<img width="1280" height="720" alt="ScreenRecording2026-05-09224113-ezgif com-video-to-gif-converter" src="https://github.com/user-attachments/assets/3c154615-2c2c-426e-94d9-8bfe63cf6d1f" />
 
 
 
@@ -86,7 +85,7 @@ plt.savefig("ndvi.png", dpi=300)
 - Orientation-aware geometry: *Length* = long axis, *Thickness* = short axis (corrected from earlier versions)
 
 
-<img width="1000" height="1000" alt="Desain tanpa judul (7)" src="https://github.com/user-attachments/assets/cd32c321-73fb-4e89-ad7c-5b9a3fac4b4b" />
+
 
 
 
@@ -99,8 +98,7 @@ plt.savefig("ndvi.png", dpi=300)
 - Alignment: left · center · right
 - Label padding, multi-column layout (1–10 columns)
 - Nodata colour with alpha channel support
-<img width="1920" height="1080" alt="Screenshot 2026-05-09 231859" src="https://github.com/user-attachments/assets/f12a90ff-9576-40c7-a0a8-61e1d7066de8" />
-<img width="1920" height="1080" alt="Desain tanpa judul (6)" src="https://github.com/user-attachments/assets/44ee310b-5801-4cfa-9a3a-7931d01316fe" />
+
 
 ### Coordinate Labels
 
@@ -115,12 +113,6 @@ plt.savefig("ndvi.png", dpi=300)
 - X and Y tick count (2–20), font size, decimal places
 - Grid line style: Solid · Dashed · Dotted
 
-### Interactive Drag System
-
-Activate **✋ Drag Elements** in the top toolbar. Then drag:
-
-
-<img width="1280" height="720" alt="ScreenRecording2026-05-09232459-ezgif com-video-to-gif-converter" src="https://github.com/user-attachments/assets/368be8bf-e836-492e-825d-23a4e0a88871" />
 
 
 
@@ -128,15 +120,6 @@ Activate **✋ Drag Elements** in the top toolbar. Then drag:
 - Discrete legend
 - Map title
 - Subtitle
-- Any custom text element
-
-Dragging updates spinbox values live; editing spinboxes repositions elements.
-
-### Text System
-
-- Map title with bold toggle and font size
-- Subtitle below title, independent size and bold
-- **➕ Add Text** — places a draggable free-text element anywhere on the figure
 
 ### Layout Series
 
@@ -190,30 +173,32 @@ Matplotlib sub-modules used: `pyplot`, `colors`, `ticker`, `patches`, `gridspec`
 - Python **≥ 3.6** (included with QGIS)
 - NumPy and Matplotlib (bundled in QGIS)
 
-### Option 1 — Plugin Manager *(pending approval)*
+### Option 1 — Plugin Manager *(available now)*
 
 1. **Plugins → Manage and Install Plugins → All**
 2. Search **RasterViz** → **Install Plugin**
 3. Access via **Raster → QRVIZ → RasterViz**
 
+> Or install directly from the [QGIS Plugin Repository](https://plugins.qgis.org/plugins/qrviz/).
+
 ### Option 2 — Install from ZIP
 
-1. Download from [Releases](https://github.com/Defani/QRasterVIZ/releases)
+1. Download from [Releases](https://github.com/Defani/RasterViz/releases)
 2. **Plugins → Manage and Install Plugins → Install from ZIP**
 
 ### Option 3 — Source
 
 ```bash
-git clone https://github.com/Defani/QRasterVIZ.git
+git clone https://github.com/Defani/RasterViz.git
 
 # Windows (OSGeo4W)
-cp -r QRasterVIZ %APPDATA%\QGIS\QGIS3\profiles\default\python\plugins\rasterviz
+cp -r RasterViz %APPDATA%\QGIS\QGIS3\profiles\default\python\plugins\rasterviz
 
 # Linux
-cp -r QRasterVIZ ~/.local/share/QGIS/QGIS3/profiles/default/python/plugins/rasterviz
+cp -r RasterViz ~/.local/share/QGIS/QGIS3/profiles/default/python/plugins/rasterviz
 
 # macOS
-cp -r QRasterVIZ "~/Library/Application Support/QGIS/QGIS3/profiles/default/python/plugins/rasterviz"
+cp -r RasterViz "~/Library/Application Support/QGIS/QGIS3/profiles/default/python/plugins/rasterviz"
 ```
 
 Then: **Plugins → Installed** → tick **RasterViz**.
@@ -318,9 +303,6 @@ In **Continuous Colorbar Layout**:
 
 ---
 
-## Interface Reference
-
-<img width="1920" height="1080" alt="Screenshot 2026-05-09 183019" src="https://github.com/user-attachments/assets/f993eba7-ea92-44f4-a22e-066fd9b9ba06" />
 
 
 ### Top Toolbar Controls
@@ -331,8 +313,7 @@ In **Continuous Colorbar Layout**:
 | **Sub** field | Subtitle below title |
 | **Font** selector | Font family for all text |
 | **Size** spinbox | Title font size |
-| **➕ Add Text** | Adds a draggable free-text element |
-| **✋ Drag Elements** | Activates interactive drag mode (blue when on) |
+
 | **💾 EXPORT** | Exports active tab — Single Map or Layout Series |
 
 ---
@@ -340,7 +321,7 @@ In **Continuous Colorbar Layout**:
 ## Codebase
 
 ```
-QRasterVIZ-main/
+RasterViz/
 ├── __init__.py       #    8 lines  QGIS classFactory entry point
 ├── qrviz.py          #   42 lines  QRVIZPlugin — initGui, unload, run
 ├── dialog.py         # 1,522 lines main dialog
@@ -410,7 +391,7 @@ Matplotlib and NumPy are distributed under the BSD License. PyQGIS and PyQt5 are
 
 ```
 Alfitriansyah, D. A. (2026). RasterViz: Scientific Raster Visualization Plugin for QGIS
-(Version 1.1.0) [Software]. https://github.com/Defani/QRasterVIZ
+(Version 1.1.0) [Software]. https://github.com/Defani/RasterViz
 ```
 
 ---
@@ -419,6 +400,6 @@ Alfitriansyah, D. A. (2026). RasterViz: Scientific Raster Visualization Plugin f
 
 Built with **PyQGIS · NumPy · Matplotlib · PyQt5**
 
-[github.com/Defani/QRasterVIZ](https://github.com/Defani/QRasterVIZ)
+[github.com/Defani/RasterViz](https://github.com/Defani/RasterViz)
 
 </div>
