@@ -10,7 +10,7 @@
 
 [![Version](https://img.shields.io/badge/version-1.1.0-3b82f6?style=flat-square)](https://plugins.qgis.org/plugins/qrviz/)
 [![QGIS](https://img.shields.io/badge/QGIS-3.x-589632?style=flat-square&logo=qgis&logoColor=white)](https://qgis.org)
-[![License](https://img.shields.io/badge/license-GPL--2.0--or--later-22c55e?style=flat-square)](LICENSE)
+[![License](https://img.shields.io/badge/license-GPL--3.0--or--later-22c55e?style=flat-square)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.6%2B-3b82f6?style=flat-square&logo=python&logoColor=white)](https://python.org)
 [![Status](https://img.shields.io/badge/QGIS%20Plugin-published-22c55e?style=flat-square)](https://plugins.qgis.org/plugins/qrviz/)
 
@@ -22,11 +22,11 @@
 
 ## Overview
 
-QGIS native symbology is designed for cartographic layer management. Generating a **publication-ready scientific figure** — with a perceptually uniform colormap, pointed colorbar with annotated intermediate ticks, geographic coordinate labels, and consistent typography — still requires switching to a Python script or Jupyter notebook.
+QGIS native symbology is designed for cartographic layer management. Generating a **publication-ready scientific figure** — with a perceptually uniform colormap, pointed colorbar with annotated ticks, and styled axes — requires context switching to Python (NumPy + Matplotlib + Rasterio).
 
 **RasterViz eliminates that context switch.**
 
-The plugin embeds Matplotlib's `Qt5Agg` backend directly inside a QGIS dialog. Every figure it produces is visually and numerically identical to what a researcher would generate with `rasterio.show()`, but controlled entirely through a GUI with live preview.
+The plugin embeds Matplotlib's `Qt5Agg` backend directly inside a QGIS dialog. Every figure it produces is visually and numerically identical to what a researcher would generate with `rasterio.show()` — but without touching a single line of code.
 
 ```python
 # What researchers had to do before RasterViz
@@ -69,12 +69,6 @@ plt.savefig("ndvi.png", dpi=300)
 - Inline ramp preview, **Reverse** toggle
 - All palettes registered via `plt.colormaps` — available anywhere in QGIS
 
-
-
-
-
-
-
 ### Colorbar
 
 - Orientation: horizontal or vertical
@@ -83,11 +77,6 @@ plt.savefig("ndvi.png", dpi=300)
 - Independent **Bold** toggles for label and tick labels
 - Configurable position, length, thickness, label text, label/tick sizes, tick count, tick decimal places, padding
 - Orientation-aware geometry: *Length* = long axis, *Thickness* = short axis (corrected from earlier versions)
-
-
-
-
-
 
 ### Discrete Legend
 
@@ -98,7 +87,6 @@ plt.savefig("ndvi.png", dpi=300)
 - Alignment: left · center · right
 - Label padding, multi-column layout (1–10 columns)
 - Nodata colour with alpha channel support
-
 
 ### Coordinate Labels
 
@@ -113,8 +101,7 @@ plt.savefig("ndvi.png", dpi=300)
 - X and Y tick count (2–20), font size, decimal places
 - Grid line style: Solid · Dashed · Dotted
 
-
-
+### Annotations
 
 - Continuous colorbar
 - Discrete legend
@@ -147,6 +134,7 @@ Generates a single figure with N×M sub-maps:
 All palettes below are registered automatically at plugin load time via `LinearSegmentedColormap.from_list()`. All standard Matplotlib colormaps (`viridis`, `plasma`, `RdYlGn`, `jet`, etc.) are also available.
 
 <img width="1621" height="1866" alt="colormaps_preview" src="https://github.com/user-attachments/assets/8a9de347-7afd-405a-aac9-0b08fe2a0f0b" />
+
 ---
 
 ## Dependencies
@@ -224,7 +212,7 @@ Then: **Plugins → Installed** → tick **RasterViz**.
 
 Load a GeoTIFF (e.g. Sentinel-2 NDVI) into QGIS. In the plugin's **Layer & Band** group, select the layer or click **OPEN RASTER FILE**. Set **Band: 1** and click **READ DATA & RENDER**.
 
-> The raster is read via `QgsRasterDataProvider.block()`, downsampled to **Max pixels (k)** for GUI responsiveness, and cached as a `float64` array. All subsequent changes re-render from cache — no disk re-read.
+> The raster is read via `QgsRasterDataProvider.block()`, downsampled to **Max pixels (k)** for GUI responsiveness, and cached as a `float64` array. All subsequent changes re-render from cache — no disk I/O.
 
 ### 2. Configure Stretch
 
@@ -276,7 +264,7 @@ In **Continuous Colorbar Layout**:
 | Tick Decimals | `2` |
 | Bold Label | ✅ |
 
-> **Scientific rationale:** Crameri et al. (2020) establish that pointed colorbar extensions communicate clipped data ranges — a scientifically meaningful signal, not decoration. Intermediate tick labels eliminate the need for mental interpolation (Rougier et al. 2014).
+> **Scientific rationale:** Crameri et al. (2020) establish that pointed colorbar extensions communicate clipped data ranges — a scientifically meaningful signal, not decoration. Intermediate tick labels allow quantitative reading without mental interpolation.
 
 ### 6. Export
 
@@ -303,8 +291,6 @@ In **Continuous Colorbar Layout**:
 
 ---
 
-
-
 ### Top Toolbar Controls
 
 | Element | Function |
@@ -313,7 +299,6 @@ In **Continuous Colorbar Layout**:
 | **Sub** field | Subtitle below title |
 | **Font** selector | Font family for all text |
 | **Size** spinbox | Title font size |
-
 | **💾 EXPORT** | Exports active tab — Single Map or Layout Series |
 
 ---
@@ -344,7 +329,7 @@ RasterViz/
 │   └── COLORMAPS          master list (~60+ total)
 ├── metadata.txt      QGIS plugin metadata
 ├── icon.png          toolbar icon
-└── LICENSE           GNU GPL v2 or later
+└── LICENSE           GNU GPL v3 or later
 ```
 
 **Total: 1,724 lines across 4 Python files.**
@@ -363,7 +348,7 @@ RasterViz/
 
 ## Scientific Rationale
 
-**Perceptually uniform colormaps** are a scientific requirement. Crameri, Shephard & Heron (2020) demonstrate that non-uniform colormaps introduce artificial features and distort quantitative reading. The palettes `Viridis_Custom`, `Magma_Custom`, `Plasma_Custom`, `Inferno_Custom`, and `Cividis_Custom` are perceptually uniform and CVD-accessible.
+**Perceptually uniform colormaps** are a scientific requirement. Crameri, Shephard & Heron (2020) demonstrate that non-uniform colormaps introduce artificial features and distort quantitative reading of data.
 
 **Pointed colorbars** communicate that data extends beyond the displayed range — scientifically significant information when percentile stretch is used.
 
@@ -375,13 +360,11 @@ RasterViz/
 - Rougier, N. P., Droettboom, M., & Bourne, P. E. (2014). Ten simple rules for better figures. *PLOS Computational Biology*, **10**(9), e1003833. https://doi.org/10.1371/journal.pcbi.1003833
 - Crameri, F. (2024). Choosing suitable color palettes for accessible and accurate science figures. *Current Protocols*. https://doi.org/10.1002/cpz1.1126
 
-
-
 ---
 
 ## License
 
-GNU General Public License v2.0 or later. See [LICENSE](LICENSE).
+GNU General Public License v3.0 or later. See [LICENSE](LICENSE).
 
 Matplotlib and NumPy are distributed under the BSD License. PyQGIS and PyQt5 are distributed under the GNU GPL v2.
 
