@@ -10,7 +10,7 @@
 
 [![Version](https://img.shields.io/badge/version-1.1.0-3b82f6?style=flat-square)](https://plugins.qgis.org/plugins/qrviz/)
 [![QGIS](https://img.shields.io/badge/QGIS-3.x-589632?style=flat-square&logo=qgis&logoColor=white)](https://qgis.org)
-[![License](https://img.shields.io/badge/license-GPL--3.0--or--later-22c55e?style=flat-square)](LICENSE)
+[![License](https://img.shields.io/badge/license-GPL--2.0--or--later-22c55e?style=flat-square)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.6%2B-3b82f6?style=flat-square&logo=python&logoColor=white)](https://python.org)
 [![Status](https://img.shields.io/badge/QGIS%20Plugin-published-22c55e?style=flat-square)](https://plugins.qgis.org/plugins/qrviz/)
 
